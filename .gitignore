@@ -1,0 +1,17 @@
+__pycache__/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.env
+.env.*
+!.env.example
+# Local state / caches (regenerable) — never committed
+.cache/
+# Raw feed content is third-party copyrighted material — never committed
+.cache/raw/
+*.db
+*.db-journal
+# Frontend build output
+frontend/node_modules/
+frontend/dist/
