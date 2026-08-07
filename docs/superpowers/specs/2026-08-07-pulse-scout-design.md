@@ -189,9 +189,22 @@ a thread correctly links a story across at least three non-consecutive days. Sta
 several weeks of accumulated history before it can connect anything, so it cannot be evaluated
 early.
 
-**Deliberately out of scope for now:** a feedback channel (thumbs up/down, a "try this later"
-list). It would help, but it requires daily typing, which contradicts the five-minute promise.
-Revisit after stage 2 has run for four weeks.
+### Deliberately out of scope for now
+
+**A feedback channel** (thumbs up/down, a "try this later" list). It would help, but it
+requires daily typing, which contradicts the five-minute promise. Revisit after stage 2 has
+run for four weeks.
+
+**A spoken version of the digest** — Nico raised this on 2026-08-07: five to ten minutes of
+audio to listen to on the move instead of reading. Recorded as task #1 rather than built,
+because it should only be attempted once the written digest has proved itself in daily use.
+The numbers are workable: five to ten minutes of speech is 1.000–2.000 tokens, so four to
+seven minutes of generation at the measured rate, plus one to two minutes for local
+text-to-speech (Piper — free, offline, German voices, faster than real time). That roughly
+doubles the daily compute. Two things to get right when the time comes: spoken text is not
+the reading text and needs its own pass (no bullet points, no parentheses, abbreviations
+spelled out), and the likely delivery route is a private RSS feed so it lands in a normal
+podcast app rather than in the PWA.
 
 ---
 
