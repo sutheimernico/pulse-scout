@@ -115,6 +115,13 @@ loop rules are global (`~/private/AUTOPILOT.md`); this project adds no exception
 
 Gate: `uv run pytest -q` green **and** `uv run ruff check .` clean. Never commit a red gate.
 
+**Session-start reminder.** `scripts/session_start_status.sh` runs at the start of every
+session under `~/private` (registered in `~/private/.claude/settings.local.json`) and prints
+the current phase plus the single next step. It derives that state from the repository — open
+checkboxes in `PLAN.md`, whether a plan document exists, how many source modules are present —
+rather than from a hand-maintained status line, because a status line nobody updates is worse
+than none. Update the script if the phase logic stops matching reality.
+
 ## §Decisions (closed, dated)
 
 | # | Date | Decision |
