@@ -556,88 +556,89 @@
     <article>
       <div class="meta">
         <span class="rank">01</span><span class="dot">&bull;</span>
-        <span>Data</span><span class="dot">&bull;</span>
-        <span>dbt Labs</span>
+        <span>Architektur</span><span class="dot">&bull;</span>
+        <span>Stripe Engineering</span>
         <span class="signal" title="Relevanzsignal 5 von 5">
           <u class="on"></u><u class="on"></u><u class="on"></u><u class="on"></u><u class="on"></u>
         </span>
       </div>
-      <h3>dbt macht den Semantic Layer offline abfragbar</h3>
-      <p>Metriken lassen sich jetzt ohne laufenden Cloud-Dienst gegen eine lokale Engine ausf&uuml;hren. Die Definitionen bleiben dieselben, nur der Ausf&uuml;hrungsweg &auml;ndert sich.</p>
+      <h3>Wie Stripe Mandantentrennung aus dem Anwendungscode herausgezogen hat</h3>
+      <p>Statt in jeder Abfrage zu filtern, sitzt die Trennung jetzt eine Schicht tiefer und wird erzwungen, statt eingehalten. Der Beitrag beschreibt auch, was dabei zweimal schiefging.</p>
       <div class="why">
         <b>Darum geht&rsquo;s dich an</b>
-        Eure Metrikdefinitionen liegen schon in dbt. Damit k&ouml;nntet ihr sie in Tests pr&uuml;fen, bevor sie im Warehouse landen &mdash; genau die L&uuml;cke, die euch bei Kennzahl&auml;nderungen bisher Nacharbeit kostet.
+        Genau die Frage, an der du gerade sitzt: Eure Mandantentrennung h&auml;ngt an Scope-Claims im internen Token, die im Serving-Backend gepr&uuml;ft werden. Der Beitrag beschreibt denselben Aufbau ein paar Jahre sp&auml;ter &mdash; inklusive der Stelle, an der ihn Stripe umgebaut hat.
       </div>
-      <div class="threadref stage2-only">Faden: Semantic Layer wird portabel &middot; Tag 23</div>
+      <div class="threadref stage2-only">Faden: Mandantentrennung &middot; Tag 14</div>
     </article>
 
     <article>
       <div class="meta">
         <span class="rank">02</span><span class="dot">&bull;</span>
-        <span>Azure</span><span class="dot">&bull;</span>
-        <span>Azure Updates</span>
-        <span class="signal" title="Relevanzsignal 4 von 5">
-          <u class="on"></u><u class="on"></u><u class="on"></u><u class="on"></u><u></u>
+        <span>Backend</span><span class="dot">&bull;</span>
+        <span>FastAPI</span>
+        <span class="signal" title="Relevanzsignal 5 von 5">
+          <u class="on"></u><u class="on"></u><u class="on"></u><u class="on"></u><u class="on"></u>
         </span>
       </div>
-      <h3>Fabric bekommt Warehouse-Snapshots mit Zeitreise</h3>
-      <p>Lesbare Momentaufnahmen eines Warehouse zu einem beliebigen Zeitpunkt der letzten 30 Tage, ohne Kopie der Daten. Ab sofort in allen Regionen verf&uuml;gbar.</p>
+      <h3>FastAPI 0.133: Abh&auml;ngigkeiten k&ouml;nnen jetzt pro Router zwischengespeichert werden</h3>
+      <p>Eine Abh&auml;ngigkeit, die bisher pro Anfrage neu aufgel&ouml;st wurde, kann jetzt f&uuml;r die Lebensdauer des Routers bestehen bleiben. Gedacht f&uuml;r teure Aufl&ouml;sungen wie Schl&uuml;sselabrufe.</p>
       <div class="why">
         <b>Darum geht&rsquo;s dich an</b>
-        Das ersetzt die Snapshot-Tabellen, die ihr heute selbst schreibt, und macht &bdquo;wie sah die Zahl letzten Montag aus&ldquo; zu einer Abfrage statt zu einem Ticket.
+        Ihr holt die &ouml;ffentlichen Schl&uuml;ssel aus dem Key Vault und haltet sie in einem selbstgebauten Zwischenspeicher. Den k&ouml;nntet ihr damit ersatzlos streichen.
       </div>
     </article>
 
     <article>
       <div class="meta">
         <span class="rank">03</span><span class="dot">&bull;</span>
-        <span>Security</span><span class="dot">&bull;</span>
-        <span>PyPI Blog</span>
+        <span>Frontend</span><span class="dot">&bull;</span>
+        <span>react.dev</span>
         <span class="signal" title="Relevanzsignal 4 von 5">
           <u class="on"></u><u class="on"></u><u class="on"></u><u class="on"></u><u></u>
         </span>
       </div>
-      <h3>Weiterer Angriff auf beliebte Python-Pakete &uuml;ber &uuml;bernommene Wartungskonten</h3>
-      <p>Drei Pakete mit zusammen &uuml;ber vier Millionen w&ouml;chentlichen Downloads verteilten &uuml;ber Nacht manipulierte Versionen. Inzwischen zur&uuml;ckgezogen.</p>
+      <h3>React-Team ver&ouml;ffentlicht Leitfaden zum Ausstieg aus Mock-Daten</h3>
+      <p>Ein Muster, um eine gegen Attrappen gebaute Oberfl&auml;che schrittweise an eine echte Schnittstelle zu h&auml;ngen, ohne alles auf einmal umzustellen &mdash; pro Route statt pro Anwendung.</p>
       <div class="why">
         <b>Darum geht&rsquo;s dich an</b>
-        Wenn eure Pipelines Abh&auml;ngigkeiten ohne feste Versionen ziehen, w&auml;re das durchgelaufen. Ein Blick in die Lockfiles der Data-Repos dauert zehn Minuten.
+        Euer Frontend l&auml;uft seit Februar fest gegen den eingebauten Mock, die getypten Endpunkte sind nie verkabelt worden. Das ist genau der Umstieg, der euch beim Go-Live bevorsteht.
       </div>
-      <div class="threadref stage2-only">Faden: Lieferkette Python &middot; Tag 61</div>
+      <div class="threadref stage2-only">Faden: Frontend-Anbindung &middot; Tag 6</div>
     </article>
 
     <article>
       <div class="meta">
         <span class="rank">04</span><span class="dot">&bull;</span>
-        <span>KI &amp; Tooling</span><span class="dot">&bull;</span>
-        <span>Hacker News</span>
-        <span class="signal" title="Relevanzsignal 3 von 5">
-          <u class="on"></u><u class="on"></u><u class="on"></u><u></u><u></u>
+        <span>Azure</span><span class="dot">&bull;</span>
+        <span>Azure Updates</span>
+        <span class="signal" title="Relevanzsignal 4 von 5">
+          <u class="on"></u><u class="on"></u><u class="on"></u><u class="on"></u><u></u>
         </span>
       </div>
-      <h3>DuckDB f&uuml;hrt Abfragen direkt gegen Parquet im Objektspeicher aus</h3>
-      <p>Ohne vorheriges Laden, mit Vorfilterung auf Dateiebene. In Messungen der Autoren dreimal schneller als der bisherige Umweg &uuml;ber eine Zwischentabelle.</p>
+      <h3>Container Apps bekommen Init-Container mit eigenem Zeitlimit</h3>
+      <p>Init-Container k&ouml;nnen jetzt ein vom Hauptcontainer getrenntes Zeitlimit bekommen, und ihre Protokolle bleiben nach einem Fehlschlag erhalten.</p>
       <div class="why">
         <b>Darum geht&rsquo;s dich an</b>
-        F&uuml;r die Ad-hoc-Analysen, f&uuml;r die ihr heute ein Cluster hochfahrt, reicht damit ein Laptop &mdash; das ist der Fall, den du zuletzt bei der Lieferantenauswertung hattest.
+        Eure Alembic-Migrationen laufen als Init-Container beim Deploy. Bisher ist bei einem Abbruch das Protokoll weg &mdash; genau das &auml;ndert sich hier.
       </div>
     </article>
 
     <article>
       <div class="meta">
         <span class="rank">05</span><span class="dot">&bull;</span>
-        <span>Development</span><span class="dot">&bull;</span>
-        <span>GitHub Blog</span>
+        <span>KI</span><span class="dot">&bull;</span>
+        <span>HuggingFace</span>
         <span class="signal" title="Relevanzsignal 3 von 5">
           <u class="on"></u><u class="on"></u><u class="on"></u><u></u><u></u>
         </span>
       </div>
-      <h3>Neue Typannotationen f&uuml;r Datenrahmen in Python 3.15</h3>
-      <p>Spalten und ihre Typen lassen sich statisch beschreiben, sodass Pr&uuml;fwerkzeuge falsche Spaltennamen vor der Ausf&uuml;hrung finden.</p>
+      <h3>Kimi K3 &uuml;berholt DeepSeek V4 in den Downloadzahlen</h3>
+      <p>1,3 Millionen Downloads in sieben Tagen gegen 700.000. Beide sind frei gewichtet und laufen lokal; K3 ist deutlich gr&ouml;&szlig;er und braucht entsprechend Speicher.</p>
       <div class="why">
         <b>Darum geht&rsquo;s dich an</b>
-        Genau die Fehlerklasse, die euch bei Umbenennungen in der Silver-Schicht regelm&auml;&szlig;ig erst zur Laufzeit auff&auml;llt.
+        Reine Einordnung, kein Handlungsbedarf: Das ist die Zahl hinter &bdquo;welches Modell ist gerade stark&ldquo;. F&uuml;r deinen Laptop ohne Grafikkarte bleibt beides zu gro&szlig;.
       </div>
+      <div class="threadref stage2-only">Faden: Offene Modelle holen auf &middot; Tag 31</div>
     </article>
 
   </div>
@@ -646,8 +647,8 @@
   <div class="marker"><b>Roter Faden</b><i></i></div>
 
   <div class="lede">
-    <p>Drei der f&uuml;nf Meldungen zeigen dieselbe Bewegung: Werkzeuge, die bisher einen laufenden Dienst brauchten, laufen jetzt lokal. Der Semantic Layer, die Abfrage-Engine, die Typpr&uuml;fung &mdash; alles wandert von &bdquo;l&auml;uft in der Cloud&ldquo; zu &bdquo;l&auml;uft auf deinem Rechner, bevor du committest&ldquo;.</p>
-    <p class="stage2-only">Damit setzt sich fort, was seit Anfang Juli in diesem Faden auff&auml;llt. Wenn das h&auml;lt, verschiebt sich die Frage von &bdquo;welches Warehouse&ldquo; zu &bdquo;was pr&uuml;fe ich schon vorher&ldquo;.</p>
+    <p>Drei der f&uuml;nf Meldungen drehen sich um dieselbe Sache: Dinge, die heute im Anwendungscode stehen, wandern eine Schicht tiefer. Mandantentrennung in die Datenschicht, Schl&uuml;sselzwischenspeicher ins Framework, Migrationsprotokolle in die Plattform.</p>
+    <p class="stage2-only">Das passt zu dem, was in diesem Faden seit Mitte Juli auff&auml;llt. F&uuml;r deine Architekturfragen hei&szlig;t das: die Frage ist seltener &bdquo;wie baue ich das&ldquo; und &ouml;fter &bdquo;wer erzwingt das&ldquo;.</p>
   </div>
 
   <!-- ============ FÄDEN (Stufe 2) ============ -->
@@ -655,111 +656,105 @@
 
   <div class="threads stage2-only">
     <div class="thread">
-      <div class="daycount">Tag<strong>23</strong></div>
+      <div class="daycount">Tag<strong>14</strong></div>
       <div>
-        <p>Semantic Layer wird portabel</p>
-        <p class="sub">Heute neu: dbt macht Metriken offline abfragbar. Vorher: Cube und Databricks in dieselbe Richtung.</p>
+        <p>Mandantentrennung wandert nach unten</p>
+        <p class="sub">Heute: Stripes Umbau. Vorher: PostgreSQL-Richtlinien auf Zeilenebene, zwei Beitr&auml;ge zu Anspr&uuml;chen im Token.</p>
       </div>
     </div>
     <div class="thread">
-      <div class="daycount">Tag<strong>61</strong></div>
+      <div class="daycount">Tag<strong>31</strong></div>
       <div>
-        <p>Lieferkette Python unter Druck</p>
-        <p class="sub">Vierter &uuml;bernommener Wartungsaccount seit Juni. Bisher immer derselbe Weg: Konto ohne zweiten Faktor.</p>
+        <p>Offene Modelle holen auf</p>
+        <p class="sub">Kimi K3 vorn, DeepSeek V4 dahinter. Vierter Wechsel an der Spitze seit Juli.</p>
       </div>
     </div>
     <div class="thread">
-      <div class="daycount">Tag<strong>9</strong></div>
+      <div class="daycount">Tag<strong>6</strong></div>
       <div>
-        <p>EU-Berichtspflichten f&uuml;r KI-Systeme</p>
-        <p class="sub">Heute ruhig. Letzte Bewegung vor drei Tagen: Entwurf der Durchf&uuml;hrungsverordnung ver&ouml;ffentlicht.</p>
+        <p>Frontend-Anbindung</p>
+        <p class="sub">Heute: Leitfaden vom React-Team. Davor: zwei Beitr&auml;ge zu getypten Schnittstellenvertr&auml;gen.</p>
       </div>
     </div>
   </div>
 
   <!-- ============ KÜR ============ -->
-  <div class="marker"><b>K&uuml;r</b><i></i><em>18 Zeilen</em></div>
+  <div class="marker"><b>K&uuml;r</b><i></i><em>15 Zeilen</em></div>
 
   <div class="kuer">
 
     <details open>
-      <summary><b>DevOps &amp; Infra</b><em>3</em></summary>
+      <summary><b>Backend &amp; Datenbank</b><em>3</em></summary>
       <ul>
-        <li>Kubernetes 1.36 erkl&auml;rt In-Place-Resizing f&uuml;r stabil
-          <span>kubernetes.io &middot; 890 Punkte</span></li>
-        <li>Terraform-Fork OpenTofu &uuml;bernimmt Registry-Spiegelung
-          <span>opentofu.org &middot; 420 Punkte</span></li>
-        <li>GitHub Actions bekommt Cache-Limits pro Organisation
-          <span>github.blog</span></li>
+        <li>Pydantic 2.14 beschleunigt Validierung verschachtelter Modelle
+          <span>github.com/pydantic</span></li>
+        <li>PostgreSQL 18.2: Sicherheitsupdate, betrifft logische Replikation
+          <span>postgresql.org</span></li>
+        <li>SQLAlchemy dokumentiert async-Sitzungen in Hintergrundaufgaben neu
+          <span>github.com/sqlalchemy</span></li>
       </ul>
     </details>
 
     <details>
-      <summary><b>Infosec</b><em>3</em></summary>
+      <summary><b>Frontend</b><em>3</em></summary>
       <ul>
-        <li>Kritische L&uuml;cke in weit verbreiteter Java-Logging-Bibliothek, Patch verf&uuml;gbar
-          <span>CISA KEV &middot; aktiv ausgenutzt</span></li>
-        <li>Gro&szlig;er Cloud-Anbieter meldet Fehlkonfiguration bei Kundendaten
-          <span>therecord.media</span></li>
-        <li>Neue Analyse zu Angriffen auf CI-Runner
-          <span>Hacker News &middot; 610 Punkte</span></li>
+        <li>TypeScript 6.1 bringt schnelleren Projektverweis-Modus
+          <span>devblogs.microsoft.com</span></li>
+        <li>Tailwind 4.3 mit neuer Container-Abfrage-Syntax
+          <span>github.com/tailwindlabs</span></li>
+        <li>React Aria: Tabellen-Komponente verl&auml;sst die Beta
+          <span>github.com/adobe</span></li>
       </ul>
     </details>
 
     <details>
-      <summary><b>Product &amp; Design</b><em>3</em></summary>
+      <summary><b>Cloud &amp; Betrieb</b><em>3</em></summary>
       <ul>
-        <li>Figma ver&ouml;ffentlicht Variablen-API f&uuml;r Designsysteme
-          <span>figma.com</span></li>
-        <li>Studie: Nutzer erkennen KI-generierte Oberfl&auml;chen an f&uuml;nf Merkmalen
-          <span>nngroup.com</span></li>
-        <li>Linear beschreibt sein Modell f&uuml;r Roadmap-Planung
-          <span>linear.app &middot; 340 Punkte</span></li>
+        <li>Pulumi f&uuml;hrt Vorschau-Diffs pro Stack-Referenz ein
+          <span>pulumi.com</span></li>
+        <li>Azure DevOps: Pipeline-Vorlagen bekommen Parametervalidierung
+          <span>devblogs.microsoft.com</span></li>
+        <li>OpenTelemetry stabilisiert Semantik f&uuml;r Datenbank-Spannen
+          <span>opentelemetry.io</span></li>
       </ul>
     </details>
 
     <details>
-      <summary><b>Founders &amp; Funding</b><em>3</em></summary>
+      <summary><b>Security</b><em>3</em></summary>
       <ul>
-        <li>Data-Observability-Anbieter sammelt 120 Mio. in Serie C
-          <span>techcrunch.com</span></li>
-        <li>&Uuml;bernahme: Warehouse-Anbieter kauft Katalog-Startup
-          <span>Techmeme</span></li>
-        <li>Y-Combinator-Batch mit auff&auml;llig vielen Agenten-Startups
-          <span>ycombinator.com</span></li>
+        <li>Aktiv ausgenutzte L&uuml;cke in verbreiteter Bildbibliothek, Patch da
+          <span>CISA KEV &middot; Frist 21.08.</span></li>
+        <li>Weiterer &uuml;bernommener Paketbetreuer bei PyPI
+          <span>Hacker News &middot; 840 Punkte</span></li>
+        <li>Analyse zu Angriffen auf Build-Läufer
+          <span>krebsonsecurity.com</span></li>
       </ul>
     </details>
 
     <details>
-      <summary><b>Krypto &amp; Fintech</b><em>3</em></summary>
+      <summary><b>Hardware &amp; IT</b><em>2</em></summary>
       <ul>
-        <li>SEPA-Instant wird f&uuml;r alle Banken Pflicht &mdash; erste Ausf&auml;lle
-          <span>finextra.com</span></li>
-        <li>Stablecoin-Regulierung: Entwurf passiert Ausschuss
-          <span>Techmeme</span></li>
-        <li>Zahlungsdienstleister &ouml;ffnet Schnittstelle f&uuml;r Echtzeit-Abgleich
-          <span>stripe.com</span></li>
-      </ul>
-    </details>
-
-    <details>
-      <summary><b>Hardware &amp; Marketing</b><em>3</em></summary>
-      <ul>
-        <li>Neue Beschleuniger-Generation angek&uuml;ndigt, Auslieferung Q4
-          <span>anandtech-nachfolger &middot; 1.2k Punkte</span></li>
-        <li>ARM-Server-Anteil in Rechenzentren erstmals &uuml;ber 20 Prozent
+        <li>ARM-Anteil in Rechenzentren erstmals &uuml;ber 20 Prozent
           <span>theregister.com</span></li>
-        <li>Analyse: Suchmaschinen-Traffic bricht f&uuml;r Ratgeberseiten ein
-          <span>searchengineland.com</span></li>
+        <li>Neue Beschleuniger-Generation angek&uuml;ndigt, Auslieferung Q4
+          <span>Hacker News &middot; 1.2k Punkte</span></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary><b>Fintech &amp; Founders</b><em>1</em></summary>
+      <ul>
+        <li>SEPA-Instant wird Pflicht &mdash; erste Ausf&auml;lle bei kleineren Banken
+          <span>finextra.com</span></li>
       </ul>
     </details>
 
   </div>
 
   <footer>
-    <p><b>Was du hier siehst.</b> Der Aufbau, die Dichte und die L&auml;nge sind echt &mdash; die Meldungen sind erfunden. Die Frage ist nicht, ob dich diese f&uuml;nf Meldungen interessieren, sondern ob du dieses Ger&uuml;st jeden Morgen in vier Minuten durchkommst.</p>
+    <p><b>Was du hier siehst.</b> Aufbau, Dichte und L&auml;nge sind echt &mdash; die Meldungen sind erfunden. Sie zeigen aber, worauf das System zielt: <b>FastAPI, React, Architektur, Azure Container Apps, Pulumi</b> statt dbt und Warehouse. Die &bdquo;Darum geht&rsquo;s dich an&ldquo;-Zeilen beziehen sich auf euren echten Aufbau &mdash; Scope-Anspr&uuml;che im internen Token, Alembic als Init-Container, das seit Februar eingefrorene Frontend.</p>
     <p style="margin-top:0.7rem"><b>Stufe 1</b> ist alles au&szlig;er den F&auml;den: sammeln, filtern, bewerten, schreiben, Handy-Ansicht. <b>Stufe 2</b> erg&auml;nzt die laufenden F&auml;den mit Tagesz&auml;hler, die Faden-Marken an den Karten und den zweiten Absatz im roten Faden. Schalte oben um, dann siehst du den Unterschied.</p>
-    <p style="margin-top:0.7rem">Der Trichter oben (<code>412 &rarr; 5</code>) ist bewusst sichtbar: er ist das eigentliche Versprechen der App.</p>
+    <p style="margin-top:0.7rem">H&ouml;chstens drei der f&uuml;nf Pflicht-Pl&auml;tze d&uuml;rfen aus einem Bereich kommen &mdash; sonst verdr&auml;ngt ein KI-Nachrichtentag deinen eigenen Beruf aus deinem eigenen Digest. Der Trichter oben (<code>412 &rarr; 5</code>) ist bewusst sichtbar: er ist das eigentliche Versprechen.</p>
   </footer>
 
 </div>

@@ -51,28 +51,59 @@ full CPU load per day. The architecture in §4 exists to bring that down to roug
 
 ## 3 · Topics
 
-Reordered on 2026-08-07 after Nico clarified what he actually cares about (decision D5).
+Set on 2026-08-07, then corrected the same day (decisions D5 and D7). The correction matters:
+the first version was built on the assumption that Nico is a data engineer. He is not — he is
+a fullstack developer with a backend emphasis, currently working on architecture questions.
+The topic list is now derived from **what his repositories actually contain**, read rather
+than guessed.
 
-**Tier 1 — AI models and releases.** The core interest: what came out, and is it stronger?
-Anthropic (including feature announcements), OpenAI, DeepSeek, Kimi/Moonshot, Qwen, Mistral,
-MiniMax. This is the category that gets the most Pflicht slots.
+### Tier 1 — his job
 
-**Tier 2 — Azure and cloud.** Nico works in a large cloud environment; Azure product updates
-are directly job-relevant.
+Scoped to the stack in the employer repositories as of 2026-08-07:
 
-**Tier 3 — everything else with real daily volume.** Development, DevOps, Security,
-Hardware/IT, Crypto/Fintech, Founders.
+| Area | What he actually uses |
+|---|---|
+| Backend | Python 3.12, FastAPI, SQLModel, SQLAlchemy async, Alembic, PostgreSQL |
+| Frontend | React 19, TypeScript 5.9, Vite, Tailwind 4, React Aria Components, Recharts |
+| Architecture | Service boundaries, row-level-security scoping, configuration models, API design — his current task focus |
+| Cloud & ops | Azure Container Apps, Container Instances, Functions, Key Vault; Pulumi; Azure DevOps Pipelines; Sentry; OpenTelemetry; Docker |
 
-**Explicitly excluded:**
+Architecture is covered two ways, deliberately: pattern writing (Martin Fowler, InfoQ's
+architecture feed, ThoughtWorks) and real case studies at scale (Stripe, Netflix, Cloudflare,
+All Things Distributed). The case studies tend to be the more useful half — concrete decisions
+with consequences rather than abstract patterns.
+
+### Tier 2 — AI models and releases
+
+A standing interest Nico named explicitly: what shipped, and is it stronger? Anthropic
+including feature announcements, OpenAI, DeepSeek, Kimi/Moonshot, Qwen, Mistral. The hard
+signal here is HuggingFace's trending list, which answers "is it stronger" with download and
+like counts instead of a press release.
+
+### Tier 3 — broad awareness
+
+Security, hardware, crypto/fintech, founders, plus the general aggregators. One line each,
+so a name has been read once.
+
+### Explicitly excluded
 
 | Excluded | Reason |
 |---|---|
-| Product Management, Design, Marketing | Verified 2026-08-07: these are near-exclusively low-frequency opinion blogs (monthly), not news. A *daily* digest would be empty most days. Nico chose to drop them entirely rather than fake volume. |
-| dbt specifically, and the data-tooling blog ecosystem around it | Nico: "dbt muss ich gar nicht wissen, das ist nicht mein Teil." Data topics still arrive, but through Azure (Fabric, Synapse, SQL) rather than the tool vendors. |
+| dbt, Databricks, DuckDB and the data-tooling ecosystem | Nico: "dbt ist nicht mein Teil." That is a different team's concern. Data topics still reach him through Azure. |
+| Terraform / HashiCorp | Their infrastructure-as-code is Pulumi. Terraform news would be pure noise. |
+| Kubernetes, CNCF, The New Stack | They run Azure Container Apps and Container Instances, no AKS. Not his operational reality. |
+| SQL Server | They run PostgreSQL and Snowflake; SQL Server only appears as a customer source system. |
+| Product Management, Design, Marketing | Verified: near-exclusively monthly opinion blogs, not news. A *daily* digest would be empty most days. |
 
-Dropping the first group had a useful side effect: Reddit is unusable as a source (verified —
+Excluding the last group had a useful side effect: Reddit is unusable as a source (verified —
 it blocks unauthenticated server access), and Reddit was the *only* relevance signal available
 for exactly those topics. Their removal makes the Reddit loss harmless.
+
+### How the five Pflicht slots are filled
+
+By score, not by quota — but with a cap: **at most three of the five may come from the same
+tier.** Without that cap a busy AI news day would push his actual job out of his own digest,
+and a quiet one would fill the slots with weak items just to satisfy a quota.
 
 ---
 
@@ -218,6 +249,8 @@ podcast app rather than in the PWA.
 | D4 | 2026-08-07 | PWA in the equity-scout pattern, not a native app | The pattern already runs on Nico's machine; no build cycle, no store |
 | D5 | 2026-08-07 | Topic set narrowed: AI models first, Azure second; Product/Design/Marketing and dbt dropped | Nico's explicit correction plus the verified finding that the dropped topics have no daily volume |
 | D6 | 2026-08-07 | Build stage 1 first, then stage 2 on top | Stage 2 needs weeks of history before it does anything; stage 1 produces that history |
+| D7 | 2026-08-07 | Tier 1 is fullstack and architecture, derived from the actual employer stack rather than assumed | Nico corrected the premise: he is a fullstack developer with a backend emphasis working on architecture questions, not a data engineer. The source list was rebuilt from what his repositories contain — which also removed Terraform, Kubernetes and SQL Server, none of which they use |
+| D8 | 2026-08-07 | At most three of the five Pflicht slots may come from one tier | Otherwise a busy AI news day pushes his own job out of his digest |
 
 ---
 

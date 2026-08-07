@@ -15,8 +15,14 @@ Codebase operations (stack, architecture, run/build/test): `AGENTS.md`.
   Kosinus-Ähnlichkeit beantwortet „gleiches Thema?" deterministisch und in Millisekunden.
 - **PWA nach dem equity-scout-Muster**, keine native App. Das Muster läuft schon auf dieser
   Maschine.
-- **Themen eingegrenzt:** KI-Modelle zuerst, Azure zweitens. Product/Design/Marketing und dbt
-  sind raus — die ersten drei haben verifiziert kein Tagesvolumen, dbt ist nicht Nicos Feld.
+- **Themen aus Nicos echtem Stack abgeleitet, nicht angenommen.** Er ist Fullstack-Entwickler
+  mit Backend-Schwerpunkt und arbeitet gerade an Architekturfragen — nicht Data Engineer.
+  Tier 1 = FastAPI/SQLModel/Alembic/PostgreSQL, React 19/TypeScript/Vite/Tailwind 4/React Aria,
+  Architektur, Azure Container Apps + Pulumi + Azure DevOps. Tier 2 = KI-Modelle.
+  Tier 3 = Breite. **Raus:** dbt und Data-Tooling, Terraform (sie nutzen Pulumi), Kubernetes
+  (sie nutzen Container Apps), SQL Server (sie nutzen PostgreSQL), Product/Design/Marketing.
+- **Höchstens 3 der 5 Pflicht-Plätze aus einem Tier**, sonst verdrängt ein KI-Nachrichtentag
+  Nicos eigenen Beruf aus seinem eigenen Digest.
 - **Durchsatz ist die bindende Grenze.** Gemessen: 18,1 Token/s Einlesen, 4,5 Token/s Schreiben,
   reine CPU. Jede Vergrößerung von Kontext oder Ausgabe kostet echte Minuten pro Tag.
 

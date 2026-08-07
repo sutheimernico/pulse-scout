@@ -1,27 +1,294 @@
 # pulse-scout — source list
 #
-# Every entry below was confirmed by a live fetch on 2026-08-07: HTTP 200 AND a real
-# feed/JSON body. Anything that answered with an HTML shell was dropped (see the
-# "Verified broken" section at the bottom, so nobody re-adds them).
+# Every entry below was confirmed by a live fetch: HTTP 200 AND a real feed/JSON body.
+# Anything that answered with an HTML shell was dropped (see "Verified broken" at the bottom,
+# so nobody re-adds them).
 #
 # TOML rather than YAML on purpose: Python 3.11 reads TOML from the standard library,
 # so the config costs no dependency.
 #
-# tier      1 = AI models and releases (Nico's core interest)
-#           2 = Azure / cloud (his working environment)
-#           3 = everything else with real daily volume
+# tier      1 = Nico's actual job: backend, frontend, architecture, his cloud stack
+#           2 = AI models and releases (explicit standing interest)
+#           3 = broad awareness: security, hardware, crypto/fintech, founders, aggregators
 # weight    multiplier applied during ranking. Higher = more likely to reach the Pflicht list.
 # abstract  does the feed carry description text? Without it, ranking runs on title alone.
 # signal    built-in relevance measure the source ships with, if any.
+#
+# Tier 1 is scoped to what Nico actually works with (established 2026-08-07 by reading the
+# employer repos, not by guessing): FastAPI + SQLModel + Alembic + PostgreSQL on the backend,
+# React 19 + TypeScript + Vite + Tailwind + React Aria on the frontend, Pulumi + Azure
+# Container Apps + Azure DevOps for infrastructure, and architecture as the current focus.
+# Notably NOT his stack: Terraform (they use Pulumi), Kubernetes (they use Container Apps),
+# GitHub Actions (they use Azure DevOps), dbt (not his part of the platform).
 
 # =============================================================================
-# TIER 1 — AI models and releases
+# TIER 1a — Backend (Python / FastAPI / PostgreSQL)
+# =============================================================================
+
+[[source]]
+name = "FastAPI releases"
+tier = 1
+weight = 1.6
+url = "https://github.com/fastapi/fastapi/releases.atom"
+kind = "atom"
+abstract = true
+note = "His primary backend framework. Low volume, high signal — a release matters every time."
+
+[[source]]
+name = "Pydantic releases"
+tier = 1
+weight = 1.4
+url = "https://github.com/pydantic/pydantic/releases.atom"
+kind = "atom"
+abstract = true
+note = "FastAPI's validation layer — breaking changes here reach his code directly."
+
+[[source]]
+name = "SQLModel releases"
+tier = 1
+weight = 1.4
+url = "https://github.com/fastapi/sqlmodel/releases.atom"
+kind = "atom"
+abstract = true
+
+[[source]]
+name = "SQLAlchemy releases"
+tier = 1
+weight = 1.3
+url = "https://github.com/sqlalchemy/sqlalchemy/releases.atom"
+kind = "atom"
+abstract = true
+note = "Async SQLAlchemy sits under SQLModel in app-backend."
+
+[[source]]
+name = "Alembic releases"
+tier = 1
+weight = 1.2
+url = "https://github.com/sqlalchemy/alembic/releases.atom"
+kind = "atom"
+abstract = true
+note = "Migrations run as init containers on deploy — a change here is a deployment risk."
+
+[[source]]
+name = "Python Insider"
+tier = 1
+weight = 1.3
+url = "https://pythoninsider.blogspot.com/feeds/posts/default"
+kind = "rss"
+abstract = true
+note = "Official Python release announcements. They run 3.12/3.13."
+
+[[source]]
+name = "PostgreSQL News"
+tier = 1
+weight = 1.3
+url = "https://www.postgresql.org/news.rss"
+kind = "rss"
+abstract = true
+note = "Four app databases on Azure Flexible Server. Security releases matter."
+
+# =============================================================================
+# TIER 1b — Frontend (React / TypeScript / Vite / Tailwind)
+# =============================================================================
+
+[[source]]
+name = "React Blog"
+tier = 1
+weight = 1.5
+url = "https://react.dev/rss.xml"
+kind = "rss"
+abstract = true
+note = "React 19 in app-frontend. This is Nico's stated growth area."
+
+[[source]]
+name = "TypeScript Blog"
+tier = 1
+weight = 1.4
+url = "https://devblogs.microsoft.com/typescript/feed/"
+kind = "rss"
+abstract = true
+
+[[source]]
+name = "Vite releases"
+tier = 1
+weight = 1.2
+url = "https://github.com/vitejs/vite/releases.atom"
+kind = "atom"
+abstract = true
+
+[[source]]
+name = "Tailwind CSS releases"
+tier = 1
+weight = 1.2
+url = "https://github.com/tailwindlabs/tailwindcss/releases.atom"
+kind = "atom"
+abstract = true
+note = "Tailwind 4 — the v3-to-v4 shift is still rippling through the ecosystem."
+
+[[source]]
+name = "React Aria / Spectrum releases"
+tier = 1
+weight = 1.0
+url = "https://github.com/adobe/react-spectrum/releases.atom"
+kind = "atom"
+abstract = true
+note = "Untitled UI is built on React Aria Components, so this is their real upstream."
+
+[[source]]
+name = "Recharts releases"
+tier = 1
+weight = 0.9
+url = "https://github.com/recharts/recharts/releases.atom"
+kind = "atom"
+abstract = true
+
+# =============================================================================
+# TIER 1c — Architecture (Nico's current focus: service boundaries, scoping, config models)
+# =============================================================================
+
+[[source]]
+name = "Martin Fowler"
+tier = 1
+weight = 1.6
+url = "https://martinfowler.com/feed.atom"
+kind = "atom"
+abstract = true
+note = "The reference voice for the exact questions he has now: service cut, boundaries, patterns."
+
+[[source]]
+name = "InfoQ Architecture"
+tier = 1
+weight = 1.4
+url = "https://feed.infoq.com/architecture-design/"
+kind = "rss"
+abstract = true
+note = "The architecture-specific feed, not the general InfoQ firehose."
+
+[[source]]
+name = "ThoughtWorks Insights"
+tier = 1
+weight = 1.2
+url = "https://www.thoughtworks.com/rss/insights.xml"
+kind = "rss"
+abstract = true
+note = "Slow server — allow a generous timeout, and never let it block the run."
+
+[[source]]
+name = "Stripe Engineering"
+tier = 1
+weight = 1.3
+url = "https://stripe.com/blog/feed.rss"
+kind = "rss"
+abstract = true
+note = "Real architecture case studies at scale — more useful than abstract pattern posts."
+
+[[source]]
+name = "Netflix Tech Blog"
+tier = 1
+weight = 1.2
+url = "https://netflixtechblog.com/feed"
+kind = "rss"
+abstract = true
+
+[[source]]
+name = "Cloudflare Blog"
+tier = 1
+weight = 1.1
+url = "https://blog.cloudflare.com/rss/"
+kind = "rss"
+abstract = true
+
+[[source]]
+name = "All Things Distributed (Vogels)"
+tier = 1
+weight = 1.1
+url = "https://www.allthingsdistributed.com/atom.xml"
+kind = "atom"
+abstract = true
+
+# =============================================================================
+# TIER 1d — His cloud and operations stack (Azure, Pulumi, observability)
+# =============================================================================
+
+[[source]]
+name = "Azure Updates"
+tier = 1
+weight = 1.5
+url = "https://www.microsoft.com/releasecommunications/api/v2/azure/rss"
+kind = "rss"
+abstract = true
+note = """200 current entries. Covers Container Apps, Functions, Key Vault, Postgres Flexible
+Server — the services they actually run on. The widely cited
+azure.microsoft.com/updates/feed/ does NOT work; it returns HTML."""
+
+[[source]]
+name = "Azure Blog"
+tier = 1
+weight = 1.2
+url = "https://azure.microsoft.com/en-us/blog/feed/"
+kind = "rss"
+abstract = true
+
+[[source]]
+name = "Azure DevOps Blog"
+tier = 1
+weight = 1.2
+url = "https://devblogs.microsoft.com/devops/feed/"
+kind = "rss"
+abstract = true
+note = "They run Azure DevOps Pipelines, not GitHub Actions."
+
+[[source]]
+name = "Pulumi Blog"
+tier = 1
+weight = 1.3
+url = "https://www.pulumi.com/blog/rss.xml"
+kind = "rss"
+abstract = true
+note = "Their IaC is Pulumi in Python. Terraform/HashiCorp is deliberately NOT in this list."
+
+[[source]]
+name = "OpenTelemetry Blog"
+tier = 1
+weight = 1.0
+url = "https://opentelemetry.io/blog/index.xml"
+kind = "rss"
+abstract = true
+note = "Arize Phoenix traces run on OTel."
+
+[[source]]
+name = "Sentry Blog"
+tier = 1
+weight = 1.0
+url = "https://blog.sentry.io/feed.xml"
+kind = "rss"
+abstract = true
+note = "Error tracking in app-backend."
+
+[[source]]
+name = "Docker Blog"
+tier = 1
+weight = 0.9
+url = "https://www.docker.com/blog/feed/"
+kind = "rss"
+abstract = true
+
+[[source]]
+name = "Azure SDK Blog"
+tier = 1
+weight = 0.9
+url = "https://devblogs.microsoft.com/azure-sdk/feed/"
+kind = "rss"
+abstract = true
+
+# =============================================================================
+# TIER 2 — AI models and releases
 # =============================================================================
 
 [[source]]
 name = "HuggingFace Trending"
-tier = 1
-weight = 1.6
+tier = 2
+weight = 1.5
 url = "https://huggingface.co/api/models?sort=likes7d&direction=-1&limit=50"
 kind = "json"
 abstract = false
@@ -30,38 +297,20 @@ note = """The hardest available answer to 'which models are actually strong'. Do
 this to sort=createdAt — that returns hobbyist uploads with zero downloads and is useless."""
 
 [[source]]
-name = "HuggingFace Daily Papers"
-tier = 1
-weight = 1.2
-url = "https://huggingface.co/api/daily_papers"
-kind = "json"
-abstract = true
-signal = "upvotes"
-note = "Curated, unlike the arXiv firehose."
-
-[[source]]
-name = "OpenAI News"
-tier = 1
-weight = 1.5
-url = "https://openai.com/news/rss.xml"
-kind = "rss"
-abstract = true
-
-[[source]]
 name = "Anthropic (X mirror, main)"
-tier = 1
+tier = 2
 weight = 1.5
 url = "https://nitter.net/AnthropicAI/rss"
 kind = "rss"
 abstract = true
 fragile = true
-note = """Anthropic publishes no RSS feed. This is a Nitter mirror — of four instances tested
-on 2026-08-07, only nitter.net returned real content. Treat as a bonus source: the fetcher
-must tolerate its disappearance without failing the run."""
+note = """Anthropic publishes no RSS feed. This is a Nitter mirror — of four instances tested,
+only nitter.net returned real content. Treat as a bonus: the fetcher must tolerate its
+disappearance without failing the run."""
 
 [[source]]
 name = "Anthropic (X mirror, product)"
-tier = 1
+tier = 2
 weight = 1.4
 url = "https://nitter.net/claudeai/rss"
 kind = "rss"
@@ -69,9 +318,17 @@ abstract = true
 fragile = true
 
 [[source]]
+name = "OpenAI News"
+tier = 2
+weight = 1.4
+url = "https://openai.com/news/rss.xml"
+kind = "rss"
+abstract = true
+
+[[source]]
 name = "OpenAI (X mirror)"
-tier = 1
-weight = 1.3
+tier = 2
+weight = 1.2
 url = "https://nitter.net/OpenAI/rss"
 kind = "rss"
 abstract = true
@@ -79,16 +336,16 @@ fragile = true
 
 [[source]]
 name = "Qwen (Alibaba)"
-tier = 1
-weight = 1.4
+tier = 2
+weight = 1.3
 url = "https://qwenlm.github.io/blog/index.xml"
 kind = "rss"
 abstract = true
 
 [[source]]
 name = "Mistral"
-tier = 1
-weight = 1.3
+tier = 2
+weight = 1.2
 url = "https://mistral.ai/rss.xml"
 kind = "rss"
 abstract = true
@@ -96,8 +353,8 @@ note = "Only this path works; /news/rss.xml and /feed.xml both 404."
 
 [[source]]
 name = "DeepSeek releases"
-tier = 1
-weight = 1.3
+tier = 2
+weight = 1.2
 url = "https://github.com/deepseek-ai/DeepSeek-V3/releases.atom"
 kind = "atom"
 abstract = true
@@ -105,112 +362,58 @@ note = """DeepSeek has no news feed (api.deepseek.com/news needs auth). GitHub r
 are the stable substitute and the same trick works for any lab that ships on GitHub."""
 
 [[source]]
+name = "HuggingFace Daily Papers"
+tier = 2
+weight = 1.1
+url = "https://huggingface.co/api/daily_papers"
+kind = "json"
+abstract = true
+signal = "upvotes"
+note = "Curated, unlike the arXiv firehose."
+
+[[source]]
 name = "Google AI Blog"
-tier = 1
-weight = 1.2
+tier = 2
+weight = 1.1
 url = "https://blog.google/technology/ai/rss/"
 kind = "rss"
 abstract = true
 
 [[source]]
 name = "DeepMind"
-tier = 1
-weight = 1.2
+tier = 2
+weight = 1.0
 url = "https://deepmind.google/blog/rss.xml"
 kind = "rss"
 abstract = false
 
 [[source]]
 name = "Hugging Face Blog"
-tier = 1
-weight = 1.1
+tier = 2
+weight = 1.0
 url = "https://huggingface.co/blog/feed.xml"
 kind = "rss"
 abstract = false
 
 [[source]]
 name = "Microsoft Research"
-tier = 1
-weight = 1.1
+tier = 2
+weight = 0.9
 url = "https://www.microsoft.com/en-us/research/feed/"
 kind = "rss"
 abstract = true
 
 [[source]]
 name = "MarkTechPost"
-tier = 1
-weight = 0.9
+tier = 2
+weight = 0.8
 url = "https://www.marktechpost.com/feed/"
 kind = "rss"
 abstract = true
-note = "High volume aggregator; useful to catch Anthropic/Moonshot news that has no own feed."
-
-[[source]]
-name = "MIT News (AI)"
-tier = 1
-weight = 1.0
-url = "https://news.mit.edu/rss/topic/artificial-intelligence2"
-kind = "rss"
-abstract = true
+note = "High-volume aggregator; catches Anthropic/Moonshot news that has no own feed."
 
 # =============================================================================
-# TIER 2 — Azure and cloud
-# =============================================================================
-
-[[source]]
-name = "Azure Updates"
-tier = 2
-weight = 1.5
-url = "https://www.microsoft.com/releasecommunications/api/v2/azure/rss"
-kind = "rss"
-abstract = true
-note = """200 current entries, covers Fabric, Synapse, Databricks and SQL as well.
-The commonly cited azure.microsoft.com/updates/feed/ does NOT work — it returns HTML."""
-
-[[source]]
-name = "Azure Blog"
-tier = 2
-weight = 1.3
-url = "https://azure.microsoft.com/en-us/blog/feed/"
-kind = "rss"
-abstract = true
-
-[[source]]
-name = "Power BI (via Learn search)"
-tier = 2
-weight = 1.2
-url = "https://learn.microsoft.com/api/search/rss?search=power+bi&locale=en-us"
-kind = "rss"
-abstract = true
-note = """The Power BI blog itself is Cloudflare-blocked. The Learn search endpoint returns a
-valid feed for any search term and closes that gap — reuse the trick for other Microsoft gaps."""
-
-[[source]]
-name = "Azure DevOps Blog"
-tier = 2
-weight = 1.1
-url = "https://devblogs.microsoft.com/devops/feed/"
-kind = "rss"
-abstract = true
-
-[[source]]
-name = "Azure SDK Blog"
-tier = 2
-weight = 1.0
-url = "https://devblogs.microsoft.com/azure-sdk/feed/"
-kind = "rss"
-abstract = true
-
-[[source]]
-name = "SQL Server Blog"
-tier = 2
-weight = 1.0
-url = "https://www.microsoft.com/en-us/sql-server/blog/feed/"
-kind = "rss"
-abstract = true
-
-# =============================================================================
-# TIER 3 — Development, DevOps, Security, Hardware/IT, Crypto/Fintech, Founders
+# TIER 3 — Broad awareness
 # =============================================================================
 
 [[source]]
@@ -225,92 +428,44 @@ note = """Strongest generic signal available. For 'last 24h' add
 &numericFilters=created_at_i>UNIXTIME, then sort by points. Limit 10k requests/hour."""
 
 [[source]]
-name = "Lobsters"
+name = "Techmeme"
 tier = 3
 weight = 1.1
+url = "https://www.techmeme.com/feed.xml"
+kind = "rss"
+abstract = true
+note = "Editorially curated meta-aggregator, 100+/day. Catches announcements with no own feed."
+
+[[source]]
+name = "Lobsters"
+tier = 3
+weight = 1.0
 url = "https://lobste.rs/hottest.json"
 kind = "json"
 abstract = false
 signal = "score + comments"
 
 [[source]]
-name = "Techmeme"
-tier = 3
-weight = 1.2
-url = "https://www.techmeme.com/feed.xml"
-kind = "rss"
-abstract = true
-note = "Editorially curated meta-aggregator, 100+/day. Catches announcements that have no own feed."
-
-[[source]]
 name = "GitHub Blog"
 tier = 3
-weight = 1.0
+weight = 0.9
 url = "https://github.blog/feed/"
 kind = "rss"
 abstract = true
 
 [[source]]
-name = "InfoQ"
+name = "InfoQ (general)"
 tier = 3
-weight = 0.9
+weight = 0.7
 url = "https://www.infoq.com/feed"
 kind = "rss"
 abstract = true
-
-[[source]]
-name = "Stack Overflow Blog"
-tier = 3
-weight = 0.8
-url = "https://stackoverflow.blog/feed/"
-kind = "rss"
-abstract = true
-note = "Titles contain invisible unicode watermarks — strip them before deduplication."
-
-[[source]]
-name = "Kubernetes"
-tier = 3
-weight = 0.9
-url = "https://kubernetes.io/feed.xml"
-kind = "rss"
-abstract = true
-
-[[source]]
-name = "CNCF"
-tier = 3
-weight = 0.8
-url = "https://www.cncf.io/feed/"
-kind = "rss"
-abstract = true
-
-[[source]]
-name = "The New Stack"
-tier = 3
-weight = 0.8
-url = "https://thenewstack.io/feed/"
-kind = "rss"
-abstract = true
-
-[[source]]
-name = "HashiCorp"
-tier = 3
-weight = 0.8
-url = "https://www.hashicorp.com/blog/feed.xml"
-kind = "rss"
-abstract = true
-
-[[source]]
-name = "Docker"
-tier = 3
-weight = 0.7
-url = "https://www.docker.com/blog/feed/"
-kind = "rss"
-abstract = true
+note = "The architecture-specific InfoQ feed is in tier 1; this is the remainder."
 
 [[source]]
 name = "CISA KEV (actively exploited)"
 tier = 3
-weight = 1.4
+weight = 1.3
 url = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
 kind = "json"
 abstract = true
@@ -320,7 +475,7 @@ note = "Official, daily updated. The other CISA endpoints are IP-blocked from so
 [[source]]
 name = "The Hacker News (security)"
 tier = 3
-weight = 1.0
+weight = 0.9
 url = "https://thehackernews.com/feeds/posts/default"
 kind = "rss"
 abstract = true
@@ -328,7 +483,7 @@ abstract = true
 [[source]]
 name = "BleepingComputer"
 tier = 3
-weight = 0.9
+weight = 0.8
 url = "https://www.bleepingcomputer.com/feed/"
 kind = "rss"
 abstract = true
@@ -336,7 +491,7 @@ abstract = true
 [[source]]
 name = "Krebs on Security"
 tier = 3
-weight = 1.1
+weight = 1.0
 url = "https://krebsonsecurity.com/feed/"
 kind = "rss"
 abstract = true
@@ -345,7 +500,7 @@ note = "Rare but high quality — weight compensates for low frequency."
 [[source]]
 name = "Schneier on Security"
 tier = 3
-weight = 0.9
+weight = 0.8
 url = "https://www.schneier.com/feed/atom/"
 kind = "atom"
 abstract = true
@@ -353,7 +508,7 @@ abstract = true
 [[source]]
 name = "Ars Technica"
 tier = 3
-weight = 0.9
+weight = 0.8
 url = "https://feeds.arstechnica.com/arstechnica/index"
 kind = "rss"
 abstract = true
@@ -362,7 +517,7 @@ signal = "comment count"
 [[source]]
 name = "The Register"
 tier = 3
-weight = 0.8
+weight = 0.7
 url = "https://www.theregister.com/headlines.atom"
 kind = "atom"
 abstract = false
@@ -370,7 +525,7 @@ abstract = false
 [[source]]
 name = "Phoronix"
 tier = 3
-weight = 0.7
+weight = 0.6
 url = "https://www.phoronix.com/rss.php"
 kind = "rss"
 abstract = true
@@ -378,7 +533,7 @@ abstract = true
 [[source]]
 name = "Tom's Hardware"
 tier = 3
-weight = 0.7
+weight = 0.6
 url = "https://www.tomshardware.com/feeds/all"
 kind = "rss"
 abstract = true
@@ -386,7 +541,7 @@ abstract = true
 [[source]]
 name = "ServeTheHome"
 tier = 3
-weight = 0.7
+weight = 0.6
 url = "https://www.servethehome.com/feed/"
 kind = "rss"
 abstract = true
@@ -394,7 +549,7 @@ abstract = true
 [[source]]
 name = "The Block (crypto)"
 tier = 3
-weight = 0.7
+weight = 0.6
 url = "https://www.theblock.co/rss.xml"
 kind = "rss"
 abstract = true
@@ -402,7 +557,7 @@ abstract = true
 [[source]]
 name = "CoinTelegraph"
 tier = 3
-weight = 0.6
+weight = 0.5
 url = "https://cointelegraph.com/rss"
 kind = "rss"
 abstract = true
@@ -410,7 +565,7 @@ abstract = true
 [[source]]
 name = "Finextra (fintech)"
 tier = 3
-weight = 0.7
+weight = 0.6
 url = "https://www.finextra.com/rss/headlines.aspx"
 kind = "rss"
 abstract = true
@@ -420,7 +575,7 @@ otherwise next year's conference dates show up in today's digest."""
 [[source]]
 name = "BankingDive"
 tier = 3
-weight = 0.6
+weight = 0.5
 url = "https://www.bankingdive.com/feeds/news/"
 kind = "rss"
 abstract = true
@@ -428,7 +583,7 @@ abstract = true
 [[source]]
 name = "TechCrunch Startups"
 tier = 3
-weight = 0.7
+weight = 0.6
 url = "https://techcrunch.com/category/startups/feed/"
 kind = "rss"
 abstract = true
@@ -436,22 +591,42 @@ abstract = true
 [[source]]
 name = "EU-Startups"
 tier = 3
-weight = 0.6
+weight = 0.5
 url = "https://www.eu-startups.com/feed/"
 kind = "rss"
 abstract = true
 
 # =============================================================================
-# Verified broken on 2026-08-07 — do not re-add without re-testing
+# Removed on 2026-08-07 — worked, but does not match Nico's actual stack
 # =============================================================================
 #
-# azure.microsoft.com/updates/feed/   HTML instead of XML (working URL is in tier 2 above)
-# blog.fabric.microsoft.com           403 Cloudflare — covered via Azure Updates
-# powerbi.microsoft.com/blog/feed/    403 Cloudflare — covered via Learn search above
+# dbt Labs, Databricks, DuckDB, Monte Carlo   Nico: "dbt ist nicht mein Teil." Data tooling is
+#                                             a different team's concern. Data topics still reach
+#                                             him via Azure Updates (Fabric/Synapse/SQL).
+# SQL Server Blog                             They run PostgreSQL and Snowflake; SQL Server only
+#                                             appears as a customer source system.
+# HashiCorp / Terraform                       Their IaC is Pulumi. Terraform news is noise here.
+# Kubernetes, CNCF                            They run Azure Container Apps and Container
+#                                             Instances, no AKS. Not his operational reality.
+# The New Stack                               Mostly Kubernetes/platform-engineering — same reason.
+# Stack Overflow Blog                         Low signal-to-noise for a working developer.
+# Product Management, Design, Marketing       Verified: near-exclusively monthly opinion blogs
+#                                             with no daily volume. A daily digest would be empty.
+#
+# =============================================================================
+# Verified broken — do not re-add without re-testing
+# =============================================================================
+#
+# azure.microsoft.com/updates/feed/   HTML instead of XML (the working URL is in tier 1d)
+# blog.fabric.microsoft.com           403 Cloudflare
+# powerbi.microsoft.com/blog/feed/    403 Cloudflare — reachable via
+#                                     learn.microsoft.com/api/search/rss?search=<term> if needed
 # anthropic.com/news/rss.xml          404 — Anthropic has no RSS feed at all
 # api.deepseek.com/news               401 — needs auth
 # ai.meta.com/blog/rss/               404 — no working path found
 # moonshotai.github.io/*              404 — Kimi has no blog feed; covered via HuggingFace
+# uber.com/blog/engineering/rss/      406 — blocks automated clients
+# shopify.engineering/blog.atom       200 but returns HTML, not a feed
 # snowflake.com/*                     403 bot detection on all paths
 # reddit.com (all variants)           403/429 — blocks unauthenticated server access since 2023
 # cloudblogs.microsoft.com/feed/      dead, last entry December 2023

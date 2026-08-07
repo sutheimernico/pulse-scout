@@ -42,12 +42,27 @@ the local model's weakest area, and cosine similarity answers "same topic?" dete
 
 ## 3 · Scope
 
-**In:** AI models and releases (tier 1), Azure and cloud (tier 2), then Development, DevOps,
-Security, Hardware/IT, Crypto/Fintech, Founders.
+The topic list is derived from what Nico's repositories actually contain, read on 2026-08-07
+rather than assumed. He is a fullstack developer with a backend emphasis, currently working on
+architecture questions — not a data engineer, which was the initial wrong premise.
 
-**Out, deliberately:** Product Management, Design and Marketing — verified to be low-frequency
-opinion blogs with no daily volume. Also out: dbt and the data-tooling vendor blogs; data
-topics arrive through Azure instead.
+**Tier 1 — his job.** Backend (Python 3.12, FastAPI, SQLModel, SQLAlchemy, Alembic,
+PostgreSQL), frontend (React 19, TypeScript, Vite, Tailwind 4, React Aria, Recharts),
+architecture (both pattern writing and real case studies at scale), and his cloud stack
+(Azure Container Apps/Functions/Key Vault, Pulumi, Azure DevOps, Sentry, OpenTelemetry).
+
+**Tier 2 — AI models and releases.** A standing interest: what shipped and is it stronger.
+HuggingFace's trending list answers that with numbers rather than announcements.
+
+**Tier 3 — broad awareness.** Security, hardware, crypto/fintech, founders, aggregators.
+
+**Out, deliberately:** dbt and the data-tooling ecosystem (a different team's concern);
+Terraform (they use Pulumi); Kubernetes and CNCF (they use Container Apps, no AKS); SQL Server
+(they use PostgreSQL and Snowflake); Product Management, Design and Marketing (verified to be
+monthly opinion blogs with no daily volume).
+
+The five Pflicht slots are filled by score, capped at three per tier — otherwise a busy AI
+news day would push his own job out of his own digest.
 
 ## 4 · Data model
 
@@ -108,8 +123,10 @@ Gate: `uv run pytest -q` green **and** `uv run ruff check .` clean. Never commit
 | D2 | 2026-08-07 | The digest is written locally, not by the Claude API. Claude argued against this twice with measurements; Nico decided, and the decision stands |
 | D3 | 2026-08-07 | Threading by embeddings, not by the language model |
 | D4 | 2026-08-07 | PWA in the equity-scout pattern, not a native app |
-| D5 | 2026-08-07 | Topics narrowed: AI models first, Azure second; Product/Design/Marketing and dbt dropped |
+| D5 | 2026-08-07 | Topics narrowed: Product/Design/Marketing and dbt dropped |
 | D6 | 2026-08-07 | Stage 1 first, stage 2 on top of it |
+| D7 | 2026-08-07 | Tier 1 is fullstack and architecture, derived from the actual employer stack rather than assumed. Also removed Terraform, Kubernetes and SQL Server — none of which they use |
+| D8 | 2026-08-07 | At most three of the five Pflicht slots may come from one tier |
 
 ## §Open inputs (Needs Nico)
 
