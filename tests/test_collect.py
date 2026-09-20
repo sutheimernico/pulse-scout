@@ -176,3 +176,25 @@ def test_the_summary_line_reports_real_numbers() -> None:
     report = collect(sources, fetcher=fetcher, now=NOW, max_failure_ratio=0.6)
 
     assert report.summary_line() == "1 items from 2/3 sources (0 unchanged, 1 skipped, 1 failed)"
+
+
+ARCHIVE_RSS = (
+    b"<?xml version='1.0'?><rss version='2.0'><channel>"
+    b"<item><title>From yesterday</title><link>https://example.test/new</link>"
+    b"<pubDate>Sat, 19 Sep 2026 12:00:00 +0000</pubDate></item>"
+    b"<item><title>From 2008</title><link>https://example.test/ancient</link>"
+    b"<pubDate>Tue, 24 Jun 2008 12:00:00 +0000</pubDate></item>"
+    b"<item><title>Undated release</title><link>https://example.test/rel</link></item>"
+    b"</channel></rss>"
+)
+
+
+def test_archive_feeds_are_cut_to_the_window() -> None:
+    """ThoughtWorks Insights returns 2.722 entries going back to 2008. All of them, every day."""
+    src = source("archive")
+    fetcher = StubFetcher({src.url: ok(src.url, ARCHIVE_RSS)})
+
+    report = collect([src], fetcher=fetcher, now=NOW, window_hours=72)
+
+    assert [item.title for item in report.items] == ["From yesterday", "Undated release"]
+    assert report.outcomes[0].item_count == 2

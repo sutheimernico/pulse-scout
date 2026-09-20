@@ -66,7 +66,10 @@ def test_huggingface_models_are_not_time_windowed() -> None:
     assert len(items) == 1
 
 
-def test_huggingface_papers_use_the_upvote_signal_and_the_window() -> None:
+def test_huggingface_papers_keep_the_whole_daily_selection() -> None:
+    """The endpoint *is* today's list. Filtering it by each paper's own publication date
+    returned nothing at all against the live API on 2026-09-20 — papers reach the daily list
+    days after they are published."""
     payload = [
         {
             "title": "A synthetic paper",
@@ -76,13 +79,13 @@ def test_huggingface_papers_use_the_upvote_signal_and_the_window() -> None:
             "paper": {"id": "2609.00001", "upvotes": 45},
         },
         {
-            "title": "An old paper",
-            "publishedAt": "2026-01-01T00:00:00.000Z",
-            "paper": {"id": "2601.00001", "upvotes": 500},
+            "title": "A paper published earlier, listed today",
+            "publishedAt": "2026-09-14T00:00:00.000Z",
+            "paper": {"id": "2609.00002", "upvotes": 500},
         },
     ]
     items = parse(HF_PAPERS, payload)
-    assert [item.title for item in items] == ["A synthetic paper"]
+    assert len(items) == 2
     assert items[0].url == "https://huggingface.co/papers/2609.00001"
     assert items[0].engagement == {"upvotes": 45.0, "comments": 3.0}
 

@@ -27,7 +27,13 @@ from pulse_scout.sources.json_api import JsonSourceError, parse_json_source
 # Above this share of non-fragile sources failing, the run is not worth trusting.
 MAX_FAILURE_RATIO = 0.30
 
-DEFAULT_WINDOW_HOURS = 36
+# Three days rather than one. Measured on 2026-09-20, the feed corpus holds 5.618 items older
+# than a week, 367 from the last week and 113 from the last 36 hours — the configured feeds are
+# archives, not news streams (ThoughtWorks Insights alone returns 2.722 entries going back to
+# 2008). A window is therefore mandatory. Three days rather than one because the seen-set makes
+# re-offered items free, and because a laptop that slept through a run must be able to catch up
+# without a hole in the digest.
+DEFAULT_WINDOW_HOURS = 72
 
 Validators = Mapping[str, tuple[str | None, str | None]]
 """source name -> (etag, last-modified) from the previous run."""
@@ -50,6 +56,13 @@ def resolve_url(url: str, *, now: datetime, window_hours: int) -> str:
     return url.replace("{since}", str(since))
 
 
+def within_window(item: Item, *, now: datetime, window_hours: int) -> bool:
+    """Undated items are kept — the seen-set upstream decides whether they are new."""
+    if item.published_at is None:
+        return True
+    return item.published_at >= now - timedelta(hours=window_hours)
+
+
 def _parse(source: Source, body: bytes, *, now: datetime, window_hours: int) -> list[Item]:
     if source.kind == "json":
         return parse_json_source(
@@ -60,7 +73,8 @@ def _parse(source: Source, body: bytes, *, now: datetime, window_hours: int) -> 
             now=now,
             window_hours=window_hours,
         )
-    return parse_feed(body, source_name=source.name, tier=source.tier)
+    parsed = parse_feed(body, source_name=source.name, tier=source.tier)
+    return [item for item in parsed if within_window(item, now=now, window_hours=window_hours)]
 
 
 def collect(

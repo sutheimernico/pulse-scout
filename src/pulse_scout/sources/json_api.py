@@ -25,7 +25,7 @@ from typing import Any
 from pulse_scout.models import Item
 from pulse_scout.sources.feeds import clean_text, parse_timestamp
 
-DEFAULT_WINDOW_HOURS = 36
+DEFAULT_WINDOW_HOURS = 72
 
 
 class JsonSourceError(ValueError):
@@ -97,7 +97,12 @@ def huggingface_models(
 def huggingface_papers(
     body: bytes, *, source_name: str, tier: int, now: datetime, window_hours: int
 ) -> list[Item]:
-    """The curated daily paper list — the reason arXiv itself is deliberately absent."""
+    """The curated daily paper list — the reason arXiv itself is deliberately absent.
+
+    Not time-windowed, for the same reason the model list is not: this endpoint *is* today's
+    selection. Filtering it by each paper's own publication date returned nothing at all on
+    2026-09-20, because a paper reaches the daily list days after it is published.
+    """
     items = []
     for row in _require_list(_load(body, source_name), source_name):
         paper = row.get("paper")
@@ -107,8 +112,6 @@ def huggingface_papers(
         if not isinstance(title, str) or not title.strip():
             continue
         published = parse_timestamp(row.get("publishedAt") or paper.get("publishedAt"))
-        if not _in_window(published, now=now, window_hours=window_hours):
-            continue
         items.append(
             Item.create(
                 source_name=source_name,
