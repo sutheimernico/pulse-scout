@@ -1,0 +1,62 @@
+{
+  "load_average_end": [
+    44.07,
+    38.59,
+    38.9
+  ],
+  "measured_at": "2026-09-20T14:54:29+00:00",
+  "note": "Synthetic prompts (filler words, no feed content). Sizes match the design.",
+  "quick": true,
+  "machine": {
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "cpu_count": 16,
+    "load_average_start": [
+      44.07,
+      38.59,
+      38.9
+    ]
+  },
+  "score": {
+    "label": "score",
+    "model": "qwen2.5:1.5b",
+    "calls": 4,
+    "wall_seconds": 126.01,
+    "prompt_tokens_total": 815,
+    "output_tokens_total": 32,
+    "prompt_tokens_per_second": 38.14,
+    "output_tokens_per_second": 0.31,
+    "prefix_cache_ratio": 0.0,
+    "prompt_tokens_per_call": [
+      202,
+      205,
+      204,
+      204
+    ],
+    "prompt_seconds_per_call": [
+      3.75,
+      8.436,
+      1.559,
+      7.623
+    ]
+  },
+  "write": {
+    "label": "write",
+    "model": "qwen2.5:7b",
+    "calls": 1,
+    "wall_seconds": 150.13,
+    "prompt_tokens_total": 346,
+    "output_tokens_total": 40,
+    "prompt_tokens_per_second": 8.09,
+    "output_tokens_per_second": 0.38,
+    "prefix_cache_ratio": null,
+    "prompt_tokens_per_call": [
+      346
+    ],
+    "prompt_seconds_per_call": [
+      42.781
+    ]
+  },
+  "daily_budget_seconds": 276.1,
+  "daily_budget_minutes": 4.6
+}
