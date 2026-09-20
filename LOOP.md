@@ -32,9 +32,11 @@ never in context.
   numbers. A failed run must fail visibly.
 - **Content type is not trustworthy.** Several verified feeds report `text/html` and return
   valid XML. Sniff the body, not the header.
-- **Fragile sources must not break the run.** The Nitter mirrors are marked `fragile = true`
-  in `data/sources.toml` — exactly one instance worked at build time. A dead source is a
-  logged warning, never a failed run.
+- **Fragile sources must not break the run.** A source marked `fragile = true` in
+  `data/sources.toml` is skipped with a warning, never a failed run. (The three Nitter mirrors
+  that carried this flag were retired on 2026-09-20 — all dead. Nothing is marked fragile right
+  now, and the mechanism stays because the next bonus source will need it.) A *non-fragile*
+  source failing is recorded loudly, and above 30 % of them the whole run aborts.
 - **Pin new deps** with a one-line justification; simplest solution that meets the task (YAGNI).
   The config is TOML precisely so that reading it needs no dependency at all.
 
@@ -44,7 +46,9 @@ never in context.
 
 ## Where things are
 
-- Spec: `docs/superpowers/specs/2026-08-07-pulse-scout-design.md`
+- Spec: `docs/superpowers/specs/2026-08-07-pulse-scout-design.md` — **read §3/D7 for the
+  topic set, not §1 or §4**, which still describe a premise D7 revoked.
+- Plan: `docs/superpowers/plans/2026-09-20-pulse-scout-v1.md` · ADRs: `docs/adr/`
 - Sources: `data/sources.toml` (verified; the bottom section lists what is broken — don't re-add)
 - Code: `src/pulse_scout/` (one responsibility per file) · Tests: `tests/` · CLIs: `scripts/`
 - Raw cache: `.cache/` (gitignored) · Derived artifacts: `data/`
