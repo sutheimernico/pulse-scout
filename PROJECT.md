@@ -92,19 +92,30 @@ non-consecutive days.
 
 ## Status
 
-**2026-08-07 — Phase 0, scaffold.** Design approved in conversation (mockup reviewed, topics
-narrowed). Spec written. Source list verified by live fetch. Ollama throughput measured on the
-target machine. No pipeline code yet. Next step: the implementation plan for stage 1.
+**2026-09-20 — phases 1 and 2 built.** Implementation plan written
+(`docs/superpowers/plans/2026-09-20-pulse-scout-v1.md`, 25 tasks) and tasks T1–T17 delivered.
+The pipeline runs end to end. Phase 3 (API and PWA) and phase 4 (timer) are next.
+
+Three things the live source list forced, each verified by fetching the URL rather than by
+reasoning about it:
+
+- The Hacker News entry returned the twenty *newest* submissions, which have one or two points
+  each, so the "points + comments" signal it declared was empty. Corrected.
+- All three Nitter mirrors are dead (connection refused). Retired. Anthropic — which publishes
+  no RSS at all — is now covered only by GitHub release atoms and the aggregators.
+- Most feeds are archives, not news streams: one call to ThoughtWorks Insights returns 2.722
+  entries going back to 2008. Items are cut to a 72-hour publication window, and a persistent
+  seen-set stops the funnel re-processing the same snapshots every morning.
 
 Open for Nico: read the spec through; decide on a git remote; test Reddit and the CISA
-advisory feeds from home (both look IP-blocked from the build environment, not key-gated).
+advisory feeds from home; re-run the throughput benchmark on an idle machine (ADR 0001).
 
 ## Roadmap
 
-- **Phase 0** — scaffold, spec, verified source list. ← current
-- **Phase 1** — fetch and dedupe, no model involved. Measurable on its own.
-- **Phase 2** — scoring and writing; the first real digest on disk.
-- **Phase 3** — API and PWA; the first digest on the phone.
+- **Phase 0** — scaffold, spec, verified source list. Done 2026-08-07.
+- **Phase 1** — fetch and dedupe, no model involved. Done 2026-09-20, live-verified.
+- **Phase 2** — scoring and writing; the first real digest on disk. Done 2026-09-20 (T13–T17).
+- **Phase 3** — API and PWA; the first digest on the phone. ← current
 - **Phase 4** — timer, catch-up for missed runs, five days of daily use.
 - **Phase 5** — stage 2: embeddings, threads, day counters, Sunday arc.
 
@@ -134,6 +145,11 @@ than none. Update the script if the phase logic stops matching reality.
 | D6 | 2026-08-07 | Stage 1 first, stage 2 on top of it |
 | D7 | 2026-08-07 | Tier 1 is fullstack and architecture, derived from the actual employer stack rather than assumed. Also removed Terraform, Kubernetes and SQL Server — none of which they use |
 | D8 | 2026-08-07 | At most three of the five Pflicht slots may come from one tier |
+| D9 | 2026-09-20 | Items are cut to a 72-hour publication window and a persistent seen-set keyed by canonical URL. The configured feeds are archives, not streams — without this the funnel re-processes ~570 items every morning |
+| D10 | 2026-09-20 | The Kür is capped at 15 lines (5 + 15 = the 12–20 items D1 budgets). The spec said "one line per item" without a limit, which would have been 35 lines |
+| D11 | 2026-09-20 | Pflicht is *up to* five. Below the model's threshold a slot stays empty and the digest says so, rather than being filled to reach a round number |
+| D12 | 2026-09-20 | The writer's output is validated mechanically: every judgement must name a fetched item, and every number in the prose must appear in that item's own text. A failure fails the run |
+| D13 | 2026-09-20 | Phases 1–2 add no runtime dependencies. urllib, ElementTree, json, sqlite3, tomllib. FastAPI and uvicorn enter with phase 3 |
 
 ## §Open inputs (Needs Nico)
 

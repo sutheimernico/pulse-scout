@@ -34,30 +34,33 @@ Derived from `docs/superpowers/plans/2026-09-20-pulse-scout-v1.md` (2026-09-20).
 holds the file paths, acceptance criteria and the decisions behind each task — this list is the
 loop's index into it. Work top to bottom.
 
-### Phase 1 — the deterministic funnel (no model)
+### Phase 1 — the deterministic funnel (no model) — **complete 2026-09-20**
 
-- [ ] **T1** Measure the model first: `scripts/bench_ollama.py`, both models, prefix-cache check,
+- [x] **T1** Measure the model first: `scripts/bench_ollama.py`, both models, prefix-cache check,
       result to `data/benchmarks/` + `docs/adr/0001-throughput-budget.md`
-- [ ] **T2** `models.py` + `core/canonical.py` — Item/Cluster dataclasses, URL canonicalisation, `item_key`
-- [ ] **T3** `sources/http.py` — the network seam (Fetcher protocol, UrllibFetcher, conditional GET)
-- [ ] **T4** `sources/cache.py` — raw bodies into `.cache/raw/<date>/`, 14-day prune, path guard
-- [ ] **T5** `sources/feeds.py` — RSS + Atom via ElementTree, body sniffing, BOM tolerance
-- [ ] **T6** `sources/json_api.py` — HuggingFace / HN / Lobsters / CISA adapters
-- [ ] **T7** `sources/collect.py` — drive all sources, fragile handling, 30 % failure abort, FetchReport
-- [ ] **T8** `scripts/fetch_once.py` + live source reality check → `data/source_health.json`,
+      — done, but the run was contaminated by other sessions on the machine (load 38–57 on
+      16 threads). ADR 0001 item 2: **re-measure on an idle machine** before tuning anything.
+- [x] **T2** `models.py` + `core/canonical.py` — Item/Cluster dataclasses, URL canonicalisation, `item_key`
+- [x] **T3** `sources/http.py` — the network seam (Fetcher protocol, UrllibFetcher, conditional GET)
+- [x] **T4** `sources/cache.py` — raw bodies into `.cache/raw/<date>/`, 14-day prune, path guard
+- [x] **T5** `sources/feeds.py` — RSS + Atom via ElementTree, body sniffing, BOM tolerance
+- [x] **T6** `sources/json_api.py` — HuggingFace / HN / Lobsters / CISA adapters
+- [x] **T7** `sources/collect.py` — drive all sources, fragile handling, 30 % failure abort, FetchReport
+- [x] **T8** `scripts/fetch_once.py` + live source reality check → `data/source_health.json`,
       fix the HN query and retire the three dead nitter entries
-- [ ] **T9** `core/dedupe.py` — canonical-URL identity, then title Jaccard ≥ 0,60 in a 48 h window
-- [ ] **T10** `data/profile.toml` + `core/ranking.py` — keyword profile from D7, the explicit score formula
-- [ ] **T11** `store/db.py` + `store/repo.py` — SQLite schema v1, seen-set keyed by `item_key`
-- [ ] **T12** `pipeline.py` + `scripts/run_funnel.py` — phase-1 wiring with real funnel counters
+- [x] **T9** `core/dedupe.py` — canonical-URL identity, then title Jaccard ≥ 0,60 in a 48 h window
+- [x] **T10** `data/profile.toml` + `core/ranking.py` — keyword profile from D7, the explicit score formula
+- [x] **T11** `store/db.py` + `store/repo.py` — SQLite schema v1, seen-set keyed by `item_key`
+- [x] **T12** `pipeline.py` + `scripts/run_funnel.py` — phase-1 wiring with real funnel counters
 
-### Phase 2 — the model and the digest
+### Phase 2 — the model and the digest — **T13–T17 complete 2026-09-20**
 
-- [ ] **T13** `llm/ollama.py` — the model seam (generate + embed, timings, fake in tests)
-- [ ] **T14** `llm/scorer.py` + `llm/prompts.py` — 1.5b pass, strict parsing, both ranks persisted
-- [ ] **T15** `core/selection.py` — 12 finalists, ≤ 5 Pflicht with the 3-per-tier cap, ≤ 15 Kür
-- [ ] **T16** `llm/writer.py` + `core/validate.py` — 7b pass and the honesty validator (run fails on invention)
-- [ ] **T17** `core/digest.py` + `scripts/build_digest.py` — assembly, persistence, Markdown, read-time
+- [x] **T13** `llm/ollama.py` — the model seam (generate + embed, timings, fake in tests)
+      — built first, before T1, so the benchmark did not need a throwaway HTTP client.
+- [x] **T14** `llm/scorer.py` + `llm/prompts.py` — 1.5b pass, strict parsing, both ranks persisted
+- [x] **T15** `core/selection.py` — 12 finalists, ≤ 5 Pflicht with the 3-per-tier cap, ≤ 15 Kür
+- [x] **T16** `llm/writer.py` + `core/validate.py` — 7b pass and the honesty validator (run fails on invention)
+- [x] **T17** `core/digest.py` + `scripts/build_digest.py` — assembly, persistence, Markdown, read-time
 - [ ] **T18** First real end-to-end run, measured, recorded in `data/benchmarks/`
 
 ### Phase 3 — API and PWA
@@ -77,6 +80,9 @@ loop's index into it. Work top to bottom.
 - [ ] **T25** "Läuft weiter" section and the Sunday arc
 
 ## Needs Nico (loop cannot do these itself)
+
+- **Re-run `uv run python scripts/bench_ollama.py` on an idle machine.** ADR 0001 —
+  every funnel-sizing decision waits on a measurement that is not drowned in contention.
 
 - Git remote and public-visibility decision before any first push.
 - Test Reddit and the CISA advisory feeds from the home network — both fail from the build
