@@ -446,4 +446,116 @@ and one weekly summary view.
 
 ## 9 · Outcome
 
-*(appended at the end of the session)*
+*Written 2026-09-20, at the end of the session that produced this plan.*
+
+### What was built
+
+**Phase 1 complete (T1–T12) and phase 2 complete (T13–T17).** 25 commits on `autopilot/work`,
+one per task plus the corrections below; nothing pushed, no remote set. Gate at the end:
+**295 tests green, `ruff check .` clean.** Every commit was made on a green gate — with one
+exception, recorded below.
+
+Phases 3–5 (T19–T25) are untouched and remain a clean backlog in `PLAN.md`.
+
+### Live verification, not just tests
+
+The funnel was run against all 60 real sources:
+
+```
+570 gesichtet → 40 Kandidaten
+  570 seen, 559 new, 553 clusters, 40 candidates
+  60 sources ok, 0 failed
+```
+
+The top candidates were sane without any tuning: an InfoQ Architecture piece and three Azure
+PostgreSQL updates reached the top ten on tier 1, a three-source Hacker News/Ars Technica
+cluster led on cross-source duplication, and "Tin: full-text search for Postgres" was lifted by
+the `postgres` keyword. `data/source_health.json` holds the per-source numbers.
+
+### Deviations from the plan as written
+
+| # | Deviation | Why |
+|---|---|---|
+| 1 | **T13 was built before T1.** | T1's benchmark needs a client. Building the seam first avoided writing a throwaway HTTP client and then deleting it. |
+| 2 | **No cap on cluster size (D-P5 said 8).** | Any cap either discards information or does nothing. The cap that actually matters moved to ranking, where the cross-source bonus stops at four members — so a mega-cluster cannot buy the top slot, and no story is dropped. |
+| 3 | **Schema v1 held only the funnel's tables; digests arrived as v2.** | Shipping empty tables whose shape is a guess is worse than migrating once the shape is known — and it meant the migration path was exercised for real before it had to be. |
+| 4 | **Items are cut to a 72-hour publication window (new, D9).** | Not in the plan because the plan did not yet know how bad it was. See below. |
+| 5 | **`data/digests/` is gitignored.** | The spec permits "our own written digest" in `data/`, but the Kür lines are verbatim third-party headlines and the files are regenerable. The conservative reading of C4 costs nothing. |
+
+### What the live sources forced, and what it cost to find out
+
+Three corrections, each made only after fetching the URL rather than reasoning about it
+(`CLAUDE.md`'s rule, and it earned its place three times in one session):
+
+1. **Hacker News was configured to return the wrong twenty items.** `search_by_date?tags=story`
+   returns the twenty *newest* submissions — minutes old, one or two points each — so the
+   `signal = "points + comments"` the entry declared was empty. The corrected query returned 61
+   stories from the last 24 hours, the top one at 490 points. The config's own `note` had
+   described the fix; the URL never got it.
+2. **All three Nitter mirrors are dead** (connection refused; DNS resolves, nothing listens).
+   They were the *primary* coverage for Anthropic, which publishes no RSS at all. Retired into
+   the "verified broken" section. Anthropic now rests on GitHub release atoms and aggregators.
+3. **The feeds are archives, not news streams.** One call to ThoughtWorks Insights returns
+   2.722 entries going back to 2008; OpenAI News returns 1.210 back to 2015; the Azure feed
+   returns 200 every time with a BOM in front of the XML declaration. Across the corpus: 5.618
+   items older than a week, 367 from the last week, 113 from the last 36 hours. Unwindowed,
+   day one ingests 6.193 items and day two ingests them again. A publication window plus the
+   persistent seen-set turns that into 570.
+
+### Two corrections to our own work
+
+**A commit went in on a red gate.** A `pytest … | tail -3` pipeline returned `tail`'s exit
+status, so `&&` let the commit through with one test failing. Caught within a minute, the test
+fixed and the commit amended; every later gate ran under `set -o pipefail`. Recording it
+because the iron principle says never commit red, and this session did once.
+
+**The benchmark measured the wrong thing and would have produced the wrong decision.** It
+reported a prefix-cache ratio of 0,0 — which would have meant the scoring budget is unreachable
+by construction. `prompt_eval_count` reports the full prompt length whether or not the prefix
+was cached; a direct probe showed three consecutive calls sharing a 381-token system block all
+reporting 381 tokens while intake time fell from 8,43 s to 0,22 s. The cache works; the metric
+could not see it. Now measured in time. Full account in `docs/adr/0001-throughput-budget.md`.
+
+**A flaky test suite, found by accident.** Test fixtures derived URLs from `hash(title)`, and
+Python randomises string hashing per process — so cluster keys, and every tie-break that falls
+back to them, differed between runs. Replaced with a deterministic slug; the suite now passes
+under `PYTHONHASHSEED` 0, 1, 2 and 7.
+
+### Findings that stand, and what was done about them
+
+| Finding | Status |
+|---|---|
+| F1 — the spec still describes the wrong reader, including in the scoring prompt | **Closed in code.** The profile and both prompts are built from D7. A test asserts the system block never says "junior" or "business intelligence" and does name the excluded topics. The spec text itself is unchanged and still wrong; fixing it is Nico's call. |
+| F2 — snapshots, not streams | **Closed.** 72-hour window plus the seen-set. |
+| F3 — the Hacker News query | **Closed**, verified live. |
+| F4 — dead Nitter mirrors | **Closed**, verified live. |
+| F5 — the eight-minute budget | **Open.** Measured at 32,3 min, but at load 38–57 on a 16-thread machine shared with other agent sessions. ADR 0001 owes an idle re-measurement before anything is tuned. What the measurement *did* establish: generation, not context, is the bottleneck — which inverts the spec's emphasis. |
+| F6 — the uncapped Kür | **Closed.** 15 lines, ≤ 6 per group. |
+| F7 — dedupe without a method | **Closed enough.** Conservative, two knobs, every merge records its reason and score so it can be reviewed against reality later. |
+| F8 — is the 1.5B pass signal or noise? | **Open by design.** Both ranks and their Spearman correlation are persisted every run. After two weeks there is evidence rather than a belief. |
+| F9 — the "why this concerns you" line | **Open, and not engineerable away.** The validator enforces structural honesty. A fluent, confident, wrong relevance claim still passes. It belongs to the five-day verdict. |
+
+### A finding the plan did not have
+
+**Tier 1 is thin.** Over the 72-hour window the live sources returned 22 tier 1 items against
+114 tier 2 and 433 tier 3 — his own field is 4 % of the intake. The D8 cap reserves up to three
+Pflicht slots for tier 1, but it cannot conjure items that were never published. If the digest
+turns out to be mostly tier 2 and 3 in daily use, the answer is more tier 1 sources, not a
+different cap. Worth watching during the five-day trial.
+
+### What remains
+
+T18 (first real end-to-end run, measured) was started and is recorded separately below.
+T19–T25 are open and unstarted: the API and PWA, the timer, the five-day trial, and stage 2.
+
+### Needs Nico
+
+1. **Git remote and visibility.** Nothing is pushed. Unchanged, and not this agent's call.
+2. **Re-run `uv run python scripts/bench_ollama.py` on an idle machine.** Every funnel-sizing
+   decision in ADR 0001 waits on it.
+3. **Read the spec through** — and decide whether to correct §1 and §4, which still describe a
+   "junior fullstack developer specialising in data and BI". The code now ignores them, but the
+   next reader of the spec will not know that.
+4. **Reddit and CISA from home.** Unchanged. Note that the CISA *KEV JSON* does work from here;
+   it was the other CISA endpoints that were blocked.
+5. **`ollama pull nomic-embed-text`** before stage 2. Free, ~270 MB, but a local download.
