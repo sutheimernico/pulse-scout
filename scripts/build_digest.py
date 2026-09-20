@@ -63,7 +63,7 @@ def main() -> int:
         connection.close()
         return 2
 
-    print(f"funnel: {funnel.counters.headline()} in {time.monotonic() - started:.0f}s")
+    print(f"funnel: {funnel.counters.headline()} in {time.monotonic() - started:.0f}s", flush=True)
     if not funnel.candidates:
         print("nothing new today — no digest written", file=sys.stderr)
         connection.close()
@@ -89,7 +89,8 @@ def main() -> int:
         print(
             f"scoring: {len(scoring.scored)} rated in {scoring.seconds:.0f}s, "
             f"{scoring.parse_failures} unparseable, "
-            f"rank correlation {scoring.rank_correlation}"
+            f"rank correlation {scoring.rank_correlation}",
+            flush=True,
         )
         if scoring.parse_failures:
             notes.append(
@@ -98,7 +99,13 @@ def main() -> int:
             )
 
     finalists = scoring.finalists(FINALIST_COUNT)
-    selection = select(finalists, [e for e in scoring.scored if e not in finalists])
+    # Compared by cluster key rather than by value: a ScoredCandidate carries the whole
+    # cluster, so `in` would deep-compare every item on every lookup.
+    chosen = {e.candidate.cluster.key for e in finalists}
+    selection = select(
+        finalists, [e for e in scoring.scored if e.candidate.cluster.key not in chosen]
+    )
+    print(f"writing: {len(finalists)} finalists to qwen2.5:7b ...", flush=True)
 
     try:
         draft = write_digest(finalists, client=client, now=now, output_cap=args.output_cap)
@@ -107,7 +114,8 @@ def main() -> int:
         connection.close()
         return 3
 
-    print(f"writing: {draft.output_tokens} tokens in {draft.seconds:.0f}s")
+    print(f"  {draft.output_tokens} tokens in {draft.seconds:.0f}s "
+          f"(attempt {draft.attempts})", flush=True)
 
     digest = digest_module.build(
         selection=selection,
