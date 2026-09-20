@@ -20,7 +20,7 @@ from pulse_scout.llm.scorer import (
     spearman,
 )
 from pulse_scout.models import Item
-from tests.fakes import FakeClient
+from tests.fakes import FakeClient, slug
 
 NOW = datetime(2026, 9, 20, 12, 0, tzinfo=UTC)
 
@@ -30,7 +30,7 @@ def candidate(title: str, score: float = 1.0) -> Candidate:
         source_name="Feed",
         tier=1,
         title=title,
-        url=f"https://example.test/{abs(hash(title)) % 10_000}",
+        url=f"https://example.test/{slug(title)}",
         summary="A summary of the story.",
         published_at=NOW,
     )
@@ -138,14 +138,32 @@ def test_ties_break_on_the_deterministic_rank() -> None:
 
 
 def test_finalists_use_the_combined_rank() -> None:
-    client = FakeClient(replies=["1", "10", "1", "1"])
+    # Deterministic ranks are 1..4 (A..D); the model rates A worst and B best.
+    # Model ranks are therefore B=1, C=2, D=3, A=4, and the combined ranks work out as
+    # A 2.5, B 1.5, C 2.5, D 3.5 — so B leads even though A led the deterministic ranking.
+    client = FakeClient(replies=["0", "10", "5", "5"])
     result = score_candidates(
         [candidate("A"), candidate("B"), candidate("C"), candidate("D")], client=client
     )
+
+    by_title = {entry.candidate.title: entry.combined_rank for entry in result.scored}
+    assert by_title == {"A": 2.5, "B": 1.5, "C": 2.5, "D": 3.5}
+
     finalists = result.finalists(2)
-    # B was second by the deterministic ranking and first by the model: combined rank 1.5.
     assert finalists[0].candidate.title == "B"
     assert len(finalists) == 2
+
+
+def test_a_tie_on_the_combined_rank_breaks_deterministically() -> None:
+    """Two runs over the same data must produce the same digest, ties included."""
+    titles = ["A", "B", "C", "D"]
+    first = score_candidates(
+        [candidate(t) for t in titles], client=FakeClient(replies=["1", "10", "1", "1"])
+    ).finalists(4)
+    second = score_candidates(
+        [candidate(t) for t in titles], client=FakeClient(replies=["1", "10", "1", "1"])
+    ).finalists(4)
+    assert [e.candidate.title for e in first] == [e.candidate.title for e in second]
 
 
 def test_the_rank_correlation_is_reported() -> None:

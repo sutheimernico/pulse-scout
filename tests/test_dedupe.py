@@ -17,6 +17,7 @@ from pulse_scout.core.dedupe import (
     normalise_title,
 )
 from pulse_scout.models import Item
+from tests.fakes import slug
 
 NOW = datetime(2026, 9, 20, 12, 0, tzinfo=UTC)
 
@@ -27,7 +28,7 @@ def item(title: str, *, source: str = "S", url: str | None = None, tier: int = 3
         source_name=source,
         tier=tier,
         title=title,
-        url=url or f"https://{source.lower()}.test/{abs(hash(title)) % 10_000}",
+        url=url or f"https://{source.lower()}.test/{slug(title)}",
         summary=summary,
         published_at=NOW - timedelta(hours=hours),
     )

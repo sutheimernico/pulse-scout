@@ -18,6 +18,7 @@ from pulse_scout.core.selection import (
 )
 from pulse_scout.llm.scorer import ScoredCandidate
 from pulse_scout.models import Item
+from tests.fakes import slug
 
 NOW = datetime(2026, 9, 20, 12, 0, tzinfo=UTC)
 
@@ -27,7 +28,7 @@ def entry(title: str, *, tier: int = 1, rank: int = 1, model_score: int | None =
         source_name="Feed",
         tier=tier,
         title=title,
-        url=f"https://example.test/{abs(hash(title)) % 100_000}",
+        url=f"https://example.test/{slug(title)}",
         published_at=NOW,
     )
     return ScoredCandidate(

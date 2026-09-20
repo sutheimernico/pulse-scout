@@ -121,3 +121,18 @@ class FetchReport:
             f" ({len(self.unchanged)} unchanged, {len(self.skipped)} skipped,"
             f" {len(self.failed)} failed)"
         )
+
+
+@dataclass(frozen=True, slots=True)
+class Judgement:
+    """One Pflicht card: what happened, and why it concerns the reader.
+
+    `item_id` is the short handle the model was given, and it is the only way a judgement is
+    allowed to refer to an item. A judgement whose id does not resolve is not a judgement —
+    it is an invention, and the run fails on it.
+    """
+
+    item_id: str
+    headline: str
+    body: str
+    why_you: str

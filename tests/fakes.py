@@ -73,3 +73,12 @@ def scripted_transport(payloads: Iterable[dict[str, Any]]):
 
     transport.seen = seen  # type: ignore[attr-defined]
     return transport
+
+
+def slug(text: str) -> str:
+    """A stable path fragment from a title.
+
+    Not `hash()`: Python randomises string hashing per process, so hash-derived URLs make
+    item keys — and every tie-break that falls back to them — differ between test runs.
+    """
+    return "".join(character if character.isalnum() else "-" for character in text.casefold())

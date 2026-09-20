@@ -21,6 +21,7 @@ from pulse_scout.core.ranking import (
 )
 from pulse_scout.models import Item
 from pulse_scout.profile import load_profile
+from tests.fakes import slug
 
 NOW = datetime(2026, 9, 20, 12, 0, tzinfo=UTC)
 PROFILE = load_profile()
@@ -51,7 +52,7 @@ def item(
         source_name=src,
         tier=tier,
         title=title,
-        url=f"https://{src.lower()}.test/{abs(hash(title)) % 100_000}",
+        url=f"https://{src.lower()}.test/{slug(title)}",
         summary=summary,
         published_at=NOW - timedelta(hours=hours) if dated else None,
         engagement=engagement,
