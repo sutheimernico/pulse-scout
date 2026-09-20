@@ -1,0 +1,149 @@
+# pulse-scout — relevance profile
+#
+# What counts as relevant to Nico, and how much each factor moves an item.
+#
+# Derived on 2026-09-20 from PROJECT.md §3 and decision D7 — that is, from what his
+# repositories actually contain. NOT from §1 or §4 of the design spec: those two paragraphs
+# still describe him as "a junior fullstack developer specialising in data and BI", which is
+# the exact premise D7 revokes. Anything built from that sentence would quietly reinstate the
+# corrected-away assumption.
+#
+# Every constant the ranking uses lives here, so a change to what reaches the Pflicht list is
+# a diff in a config file rather than a hunt through the code.
+
+[factors]
+# Multipliers applied to the (0..1) normalised inputs. Roughly: how much can this factor
+# change an item's standing? engagement can add up to +45 %, keywords up to +120 %.
+engagement = 0.45
+keyword = 0.30
+duplicate = 0.25
+
+# The cross-source bonus stops here. Five outlets covering one story is a strong signal;
+# fifteen is the same signal plus an aggregator echo chamber, and must not buy the top slot.
+duplicate_cap = 4
+
+# How fast an item stops being news. A day-old item keeps half its weight.
+recency_half_life_hours = 24.0
+# The floor keeps a three-day-old item rankable rather than annihilated.
+recency_floor = 0.15
+# An item whose feed gave no date. Below neutral: it has not proved it is fresh.
+recency_undated = 0.55
+
+# A single item cannot accumulate unlimited keyword credit.
+keyword_cap = 4.0
+# Multiplier when an excluded topic is matched and nothing strong is matched alongside it.
+negative_penalty = 0.35
+
+[tier_bonus]
+# Tier 1 is his job and outranks everything. Tier 3 exists so a name has been read once.
+1 = 1.60
+2 = 1.20
+3 = 1.00
+
+# ---------------------------------------------------------------------------------------
+# Positive terms. Weight = how much this word says "this is his work", not how common it is.
+# Matched case-insensitively on word boundaries against title + summary.
+# ---------------------------------------------------------------------------------------
+[keywords]
+# Backend — what app-backend is actually built from
+fastapi = 3.0
+sqlmodel = 3.0
+sqlalchemy = 2.5
+alembic = 2.5
+pydantic = 2.5
+postgresql = 2.5
+postgres = 2.5
+psycopg = 2.0
+uvicorn = 2.0
+asyncio = 1.5
+python = 1.2
+"python 3.12" = 2.0
+"python 3.13" = 2.0
+
+# Frontend — the growth area, so it is weighted like the backend rather than below it
+react = 2.5
+"react 19" = 3.0
+typescript = 2.2
+vite = 2.2
+tailwind = 2.2
+"react aria" = 3.0
+recharts = 2.5
+vitest = 1.8
+"server components" = 2.0
+
+# Architecture — his current task focus, and the half of the list with the longest shelf life
+architecture = 2.0
+"service boundary" = 2.5
+"api design" = 2.5
+"row-level security" = 2.5
+"multi-tenant" = 2.2
+"database schema" = 1.8
+migration = 1.5
+"backwards compatible" = 1.5
+"case study" = 1.5
+scalability = 1.5
+"post-mortem" = 1.8
+postmortem = 1.8
+"incident review" = 1.8
+
+# Cloud and ops — his stack, and only his stack
+azure = 2.2
+"container apps" = 3.0
+"container instances" = 2.5
+"azure functions" = 2.5
+"key vault" = 2.5
+pulumi = 3.0
+"azure devops" = 2.5
+sentry = 2.2
+opentelemetry = 2.2
+"open telemetry" = 2.2
+observability = 1.8
+docker = 1.8
+
+# AI models and labs — tier 2's standing interest: what shipped, and is it stronger
+anthropic = 2.5
+claude = 2.5
+openai = 2.0
+"gpt-5" = 2.0
+deepseek = 2.0
+qwen = 2.0
+mistral = 1.8
+moonshot = 1.5
+kimi = 1.5
+llama = 1.5
+gemini = 1.8
+"open weights" = 2.0
+benchmark = 1.2
+"context window" = 1.8
+ollama = 2.2
+embeddings = 1.5
+rag = 1.5
+agentic = 1.5
+
+# Security — tier 3, but an actively exploited hole in his stack is not tier 3 news
+"actively exploited" = 2.5
+"zero-day" = 2.0
+cve = 1.2
+"supply chain" = 1.8
+ransomware = 1.2
+
+# ---------------------------------------------------------------------------------------
+# Negative terms — the topics decisions D5 and D7 removed. They still arrive through the broad
+# aggregators, which have no topic filter of their own.
+# The infrastructure-as-code tool they do NOT use, the orchestrator they do NOT run and the
+# warehouse that is a different team's concern are all listed here on purpose.
+# ---------------------------------------------------------------------------------------
+[negative_keywords]
+dbt = 1.0
+databricks = 1.0
+duckdb = 1.0
+snowflake = 1.0
+terraform = 1.0
+hashicorp = 1.0
+kubernetes = 1.0
+helm = 1.0
+cncf = 1.0
+"sql server" = 1.0
+"power bi" = 1.0
+"product management" = 1.0
+"growth marketing" = 1.0
