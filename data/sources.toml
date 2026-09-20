@@ -297,42 +297,12 @@ note = """The hardest available answer to 'which models are actually strong'. Do
 this to sort=createdAt — that returns hobbyist uploads with zero downloads and is useless."""
 
 [[source]]
-name = "Anthropic (X mirror, main)"
-tier = 2
-weight = 1.5
-url = "https://nitter.net/AnthropicAI/rss"
-kind = "rss"
-abstract = true
-fragile = true
-note = """Anthropic publishes no RSS feed. This is a Nitter mirror — of four instances tested,
-only nitter.net returned real content. Treat as a bonus: the fetcher must tolerate its
-disappearance without failing the run."""
-
-[[source]]
-name = "Anthropic (X mirror, product)"
-tier = 2
-weight = 1.4
-url = "https://nitter.net/claudeai/rss"
-kind = "rss"
-abstract = true
-fragile = true
-
-[[source]]
 name = "OpenAI News"
 tier = 2
 weight = 1.4
 url = "https://openai.com/news/rss.xml"
 kind = "rss"
 abstract = true
-
-[[source]]
-name = "OpenAI (X mirror)"
-tier = 2
-weight = 1.2
-url = "https://nitter.net/OpenAI/rss"
-kind = "rss"
-abstract = true
-fragile = true
 
 [[source]]
 name = "Qwen (Alibaba)"
@@ -420,12 +390,16 @@ note = "High-volume aggregator; catches Anthropic/Moonshot news that has no own 
 name = "Hacker News"
 tier = 3
 weight = 1.4
-url = "https://hn.algolia.com/api/v1/search_by_date?tags=story"
+url = "https://hn.algolia.com/api/v1/search?tags=story&numericFilters=created_at_i%3E{since}%2Cpoints%3E20&hitsPerPage=100"
 kind = "json"
 abstract = false
 signal = "points + comments"
-note = """Strongest generic signal available. For 'last 24h' add
-&numericFilters=created_at_i>UNIXTIME, then sort by points. Limit 10k requests/hour."""
+note = """Strongest generic signal available. Limit 10k requests/hour.
+CORRECTED 2026-09-20: the previous URL was search_by_date?tags=story, which returns the 20
+NEWEST submissions — minutes old, one or two points each — so the declared points signal was
+empty. Verified the same day: the old URL gave 20 hits out of 3.765.345; this one gave 61
+stories from the last 24 hours, the top one at 490 points and 194 comments.
+{since} is expanded to a unix timestamp by the collector."""
 
 [[source]]
 name = "Techmeme"
@@ -632,6 +606,14 @@ abstract = true
 # cloudblogs.microsoft.com/feed/      dead, last entry December 2023
 # nitter.poast.org, nitter.tiekoetter.com, nitter.privacyredirect.com, lightbrd.com
 #                                     empty or unparseable — nitter.net was the only one working
+# nitter.net (AnthropicAI, claudeai, OpenAI)
+#                                     RETIRED 2026-09-20: connection refused (curl exit 7,
+#                                     DNS resolves, nothing listens) for all three feeds and
+#                                     for the site root. The last working instance is gone,
+#                                     so Nitter is no longer a source at all. Anthropic
+#                                     coverage now rests on the GitHub release atoms and the
+#                                     aggregators — thinner than the spec assumes. Re-test
+#                                     before re-adding any mirror.
 #
 # arXiv cs.AI / cs.LG are deliberately absent: ~450 papers/day with no relevance signal
 # would drown the funnel. HuggingFace Daily Papers covers the curated subset instead.
