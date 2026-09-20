@@ -1,0 +1,30 @@
+{
+  "measured_at": "2026-09-20T16:59:00+02:00",
+  "what": "First real end-to-end run: live sources, real qwen2.5:7b, --skip-scoring.",
+  "caveat": "Load average 30-41 on 16 threads from other agent sessions on the same machine. Timings are a lower bound on throughput. See docs/adr/0001-throughput-budget.md.",
+  "funnel": {
+    "items_seen": 396,
+    "items_new": 1,
+    "candidates": 1,
+    "seconds": 31,
+    "note": "Second run of the day against the same sources: the seen-set correctly reduced 396 fetched items to 1 new one. This is the mechanism working, not a failure."
+  },
+  "scoring": {
+    "skipped": true,
+    "reason": "--skip-scoring, to keep the run inside one session"
+  },
+  "writing": {
+    "model": "qwen2.5:7b",
+    "output_tokens": 156,
+    "seconds": 229,
+    "attempts": 1,
+    "validator": "passed"
+  },
+  "digest": {
+    "cards": 1,
+    "read_seconds": 16,
+    "over_budget": false
+  },
+  "total_seconds": 260,
+  "quality_finding": "Structurally correct, factually degraded. The source headline said the companies face an antitrust suit for agreeing to SLOW AI development; the model wrote that they had agreed to STOP it, and added a motive ('auf Sicherheitsgruende hin') that is not in the source. The 'Darum geht's dich an' line was content-free. Nothing checkable was invented - no numbers, no unknown item id, no link - so the validator passed it. This is finding F9 with a concrete example on the first real run."
+}

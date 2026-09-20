@@ -543,10 +543,46 @@ Pflicht slots for tier 1, but it cannot conjure items that were never published.
 turns out to be mostly tier 2 and 3 in daily use, the answer is more tier 1 sources, not a
 different cap. Worth watching during the five-day trial.
 
+### T18 — the first real digest, and what it showed
+
+Run for real against the live sources with `qwen2.5:7b` and `--skip-scoring`. It worked:
+`data/benchmarks/2026-09-20-first-run.json`.
+
+```
+funnel: 396 gesichtet → 1 Kandidaten in 31s
+writing: 156 tokens in 229s
+396 gesichtet → 1 für dich · 0:16 Lesezeit
+wrote data/digests/2026-09-20.md after 260s total
+```
+
+396 fetched items became **one** new one, because this was the second run of the day against
+the same sources — the seen-set doing exactly its job. The digest correctly said so on its own
+face: *"Ruhiger Tag: nur 1 von 5 Plätzen sind belegt"* and *"Ohne Modell-Bewertung gebaut —
+Reihenfolge rein deterministisch."* The quiet-day rule (D-P8) and the honesty notes work.
+
+**And the content is finding F9, on the first try.** The source headline said the companies
+face an antitrust suit for agreeing to *slow* AI development. The model wrote that they had
+agreed to *stop* it, and supplied a motive ("auf Sicherheitsgründe hin") that appears nowhere
+in the source. The "Darum geht's dich an" line read: *"Es könnte deine Arbeit beeinflussen, da
+du dich mit Softwarearchitektur befasst"* — true of anything, useful for nothing.
+
+The validator passed it, correctly. Nothing checkable was invented: no numbers, no unknown item
+id, no link. Every mechanical guarantee held; the sentence that carries the product still did
+not. That is the limit named in F9, now demonstrated rather than predicted, and it is what the
+five-day verdict has to decide. It is **not** an argument to reopen D2 — Nico made that call
+with the trade-off in front of him — but he should see one real digest before the five days
+start, because this is what the local model produces on a quiet Saturday.
+
+Two cheap levers exist before anything structural: the scoring pass was skipped in this run
+(so the one candidate reached the writer unfiltered), and the writing prompt has not been
+iterated on once. Both are worth trying before drawing conclusions about the model.
+
 ### What remains
 
-T18 (first real end-to-end run, measured) was started and is recorded separately below.
 T19–T25 are open and unstarted: the API and PWA, the timer, the five-day trial, and stage 2.
+The session stopped at the phase boundary deliberately — phases 1 and 2 are complete and
+verified, and starting a React PWA as the twenty-sixth commit of a long session would have
+traded that for something half-built.
 
 ### Needs Nico
 

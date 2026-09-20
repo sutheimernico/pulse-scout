@@ -61,7 +61,11 @@ loop's index into it. Work top to bottom.
 - [x] **T15** `core/selection.py` — 12 finalists, ≤ 5 Pflicht with the 3-per-tier cap, ≤ 15 Kür
 - [x] **T16** `llm/writer.py` + `core/validate.py` — 7b pass and the honesty validator (run fails on invention)
 - [x] **T17** `core/digest.py` + `scripts/build_digest.py` — assembly, persistence, Markdown, read-time
-- [ ] **T18** First real end-to-end run, measured, recorded in `data/benchmarks/`
+- [x] **T18** First real end-to-end run, measured, recorded in `data/benchmarks/`
+      — worked end to end in 260 s. Content quality is finding F9 in the flesh: the model
+      turned "agreeing to slow AI development" into "agreed to stop it" and wrote a
+      content-free relevance line. The validator passed it, correctly — nothing checkable
+      was invented. See the plan's outcome section.
 
 ### Phase 3 — API and PWA
 
@@ -88,4 +92,7 @@ loop's index into it. Work top to bottom.
 - Test Reddit and the CISA advisory feeds from the home network — both fail from the build
   environment with what looks like an IP block rather than a missing key.
 - The five-day verdict after stage 1: does the digest actually get read?
+- **Read one real digest before the five days start** (`data/digests/2026-09-20.md`).
+  The machinery is honest; the prose from the 7B model on a quiet day is thin and, in the
+  first run, subtly wrong in a way no validator can catch.
 - `ollama pull nomic-embed-text` before phase 5 — free, ~270 MB, but a local download.
