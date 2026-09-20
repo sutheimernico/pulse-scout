@@ -12,6 +12,12 @@ __pycache__/
 .cache/raw/
 *.db
 *.db-journal
+# WAL mode (set in store/db.py so the API can read during a run) adds two sidecar files.
+*.db-wal
+*.db-shm
+# Finished digests. Our own prose, but the Kür lines are verbatim third-party headlines,
+# and the files are regenerable local output that nothing in git needs.
+data/digests/
 # Frontend build output
 frontend/node_modules/
 frontend/dist/
