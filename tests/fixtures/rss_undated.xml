@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<rss version="2.0"><channel>
+  <item><title>No date at all</title><link>https://example.test/a</link></item>
+  <item><title>Unparseable date</title><link>https://example.test/b</link><pubDate>letzten Dienstag</pubDate></item>
+  <item><link>https://example.test/c</link><description>No title, must be skipped.</description></item>
+</channel></rss>
