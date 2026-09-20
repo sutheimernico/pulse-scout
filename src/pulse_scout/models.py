@@ -8,7 +8,7 @@ compare before and after.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from types import MappingProxyType
 
@@ -72,3 +72,52 @@ class Item:
     def text(self) -> str:
         """Title plus summary — what ranking, scoring and validation all read."""
         return f"{self.title}\n{self.summary}".strip()
+
+
+@dataclass(frozen=True, slots=True)
+class SourceOutcome:
+    """What happened when one source was fetched — including the bad news.
+
+    `skipped` separates the sources we already expect to break (marked `fragile` in the config)
+    from the ones whose failure means something is wrong. Conflating them would either produce
+    a permanent false alarm or hide a real outage.
+    """
+
+    source_name: str
+    ok: bool
+    item_count: int = 0
+    status: int | None = None
+    elapsed_s: float = 0.0
+    error: str = ""
+    skipped: bool = False
+    unchanged: bool = False
+    etag: str | None = None
+    last_modified: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class FetchReport:
+    """One collection pass over the whole source list."""
+
+    items: list[Item] = field(default_factory=list)
+    outcomes: list[SourceOutcome] = field(default_factory=list)
+
+    @property
+    def failed(self) -> list[SourceOutcome]:
+        return [o for o in self.outcomes if not o.ok and not o.skipped]
+
+    @property
+    def skipped(self) -> list[SourceOutcome]:
+        return [o for o in self.outcomes if o.skipped]
+
+    @property
+    def unchanged(self) -> list[SourceOutcome]:
+        return [o for o in self.outcomes if o.unchanged]
+
+    def summary_line(self) -> str:
+        return (
+            f"{len(self.items)} items from {len(self.outcomes) - len(self.failed)}"
+            f"/{len(self.outcomes)} sources"
+            f" ({len(self.unchanged)} unchanged, {len(self.skipped)} skipped,"
+            f" {len(self.failed)} failed)"
+        )
