@@ -39,6 +39,8 @@ DIFFERENT = [
     ("https://example.com/p?id=1", "https://example.com/p?id=2", "meaningful parameter"),
     ("http://example.com/p", "https://example.com/p", "scheme is not normalised away"),
     ("https://blog.example.com/p", "https://example.com/p", "subdomains are not stripped"),
+    # WordPress search: two different result pages, not one page with tracking on it.
+    ("https://example.com/?s=fastapi", "https://example.com/?s=react", "a bare 's' is content"),
 ]
 
 

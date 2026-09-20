@@ -35,9 +35,12 @@ _TRACKING_KEYS = frozenset(
         "at_campaign",
         "cmpid",
         "sh",
-        "s",  # x.com / twitter share id
     }
 )
+# Deliberately NOT in the list: a bare "s". It is x.com's share id, but it is also WordPress's
+# search parameter, where "/?s=fastapi" and "/?s=react" are different pages. Dropping it would
+# collapse them into one — and a false merge silently deletes a story, which is the failure
+# this module is built to avoid. Leaving it in costs at most a missed merge on a tweet link.
 
 _DEFAULT_PORTS = {"http": "80", "https": "443"}
 
