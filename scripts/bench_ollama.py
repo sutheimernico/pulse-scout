@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import platform
 import sys
 from datetime import UTC, datetime
@@ -74,12 +75,18 @@ def main() -> int:
 
     budget = daily_budget_seconds(score, write)
     report = {
+        "load_average_end": [round(value, 2) for value in os.getloadavg()],
         "measured_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "note": "Synthetic prompts (filler words, no feed content). Sizes match the design.",
         "quick": args.quick,
         "machine": {
             "platform": platform.platform(),
             "processor": platform.processor() or "unknown",
+            "cpu_count": os.cpu_count(),
+            # Recorded because it decides whether these numbers mean anything. This machine
+            # also runs other agent sessions; a run taken at load 50 on 16 cores measures the
+            # contention, not the model.
+            "load_average_start": [round(value, 2) for value in os.getloadavg()],
         },
         "score": score.as_dict(),
         "write": write.as_dict(),

@@ -4,9 +4,9 @@ Migrations run off `PRAGMA user_version`, which is a plain integer SQLite keeps 
 header. No migration framework, no dependency, and the whole history is visible as a list of
 SQL steps in one place.
 
-The schema starts small on purpose. Digest tables arrive with phase 2 as version 2 — writing
-them now would mean shipping empty tables whose shape is a guess, and it would mean the
-migration mechanism is never exercised before it matters.
+The schema started at version 1 with only the funnel's tables. Version 2 added the digests,
+once their shape was known rather than guessed — which also means the migration path was
+exercised for real before it ever had to be.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from pathlib import Path
 
 DEFAULT_DB_PATH = Path(__file__).resolve().parents[3] / "data" / "pulse.db"
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 _MIGRATIONS: Sequence[tuple[int, str]] = (
     (
@@ -67,6 +67,22 @@ _MIGRATIONS: Sequence[tuple[int, str]] = (
             sources_ok     INTEGER NOT NULL DEFAULT 0,
             sources_failed INTEGER NOT NULL DEFAULT 0,
             notes          TEXT NOT NULL DEFAULT ''
+        );
+        """,
+    ),
+    (
+        2,
+        """
+        -- Finished digests, one per local date, stored whole. The API reads this table and
+        -- computes nothing (AGENTS.md): a number the interface derives on its own is a number
+        -- nobody can check against the run that produced it.
+        CREATE TABLE digests (
+            digest_date  TEXT PRIMARY KEY,
+            generated_at TEXT NOT NULL,
+            run_id       INTEGER,
+            read_seconds INTEGER NOT NULL DEFAULT 0,
+            card_count   INTEGER NOT NULL DEFAULT 0,
+            payload      TEXT NOT NULL
         );
         """,
     ),

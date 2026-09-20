@@ -145,3 +145,52 @@ def latest_run(connection: sqlite3.Connection) -> sqlite3.Row | None:
     return connection.execute(
         "SELECT * FROM runs ORDER BY id DESC LIMIT 1"
     ).fetchone()
+
+
+def save_digest(
+    connection: sqlite3.Connection,
+    *,
+    digest_date: str,
+    generated_at: str,
+    payload: str,
+    read_seconds: int,
+    card_count: int,
+    run_id: int | None = None,
+) -> None:
+    """Store a finished digest, replacing an earlier one for the same day.
+
+    Replacing is correct: a second run on the same day is a re-run, not a second edition.
+    """
+    connection.execute(
+        """
+        INSERT INTO digests (digest_date, generated_at, run_id, read_seconds, card_count, payload)
+        VALUES (?, ?, ?, ?, ?, ?)
+        ON CONFLICT(digest_date) DO UPDATE SET
+            generated_at = excluded.generated_at,
+            run_id       = excluded.run_id,
+            read_seconds = excluded.read_seconds,
+            card_count   = excluded.card_count,
+            payload      = excluded.payload
+        """,
+        (digest_date, generated_at, run_id, read_seconds, card_count, payload),
+    )
+    connection.commit()
+
+
+def latest_digest(connection: sqlite3.Connection) -> sqlite3.Row | None:
+    return connection.execute(
+        "SELECT * FROM digests ORDER BY digest_date DESC LIMIT 1"
+    ).fetchone()
+
+
+def digest_for(connection: sqlite3.Connection, digest_date: str) -> sqlite3.Row | None:
+    return connection.execute(
+        "SELECT * FROM digests WHERE digest_date = ?", (digest_date,)
+    ).fetchone()
+
+
+def digest_dates(connection: sqlite3.Connection, limit: int = 60) -> list[str]:
+    rows = connection.execute(
+        "SELECT digest_date FROM digests ORDER BY digest_date DESC LIMIT ?", (limit,)
+    ).fetchall()
+    return [row["digest_date"] for row in rows]

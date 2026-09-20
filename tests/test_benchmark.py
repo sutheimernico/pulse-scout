@@ -46,12 +46,21 @@ def test_throughput_aggregates_over_calls() -> None:
     assert report.wall_seconds == pytest.approx(6.0)
 
 
-def test_prefix_cache_ratio_detects_a_working_cache() -> None:
-    # First call evaluates the whole prompt, later calls only the new suffix.
-    cached = PassReport("score", "m", [measurement(350)] + [measurement(35)] * 4)
+def test_prefix_cache_ratio_is_measured_in_time_not_tokens() -> None:
+    """Ollama reports the full prompt_eval_count whether or not the prefix was cached.
+
+    Verified live on 2026-09-20: three calls sharing a 381-token system block all reported
+    381 tokens, while the intake time fell from 8,43 s to 0,22 s. A token-based metric would
+    have concluded "no cache" and sent the budget decision the wrong way.
+    """
+    cached = PassReport(
+        "score",
+        "m",
+        [measurement(350, prompt_seconds=8.0)] + [measurement(350, prompt_seconds=0.8)] * 4,
+    )
     assert cached.prefix_cache_ratio == pytest.approx(0.9)
 
-    cold = PassReport("score", "m", [measurement(350)] * 5)
+    cold = PassReport("score", "m", [measurement(350, prompt_seconds=8.0)] * 5)
     assert cold.prefix_cache_ratio == pytest.approx(0.0)
 
 
@@ -95,10 +104,15 @@ def test_daily_budget_is_the_sum_of_both_passes() -> None:
 
 
 def test_report_dict_is_json_shaped() -> None:
-    report = PassReport("score", "m", [measurement(350), measurement(35), measurement(35)])
+    report = PassReport(
+        "score",
+        "m",
+        [measurement(350, prompt_seconds=8.0)] + [measurement(350, prompt_seconds=0.8)] * 2,
+    )
     as_dict = report.as_dict()
     assert as_dict["calls"] == 3
     assert as_dict["model"] == "m"
     assert as_dict["prefix_cache_ratio"] == pytest.approx(0.9)
     # The verdict must stay checkable against the raw per-call numbers.
-    assert as_dict["prompt_tokens_per_call"] == [350, 35, 35]
+    assert as_dict["prompt_tokens_per_call"] == [350, 350, 350]
+    assert as_dict["prompt_seconds_per_call"] == [8.0, 0.8, 0.8]

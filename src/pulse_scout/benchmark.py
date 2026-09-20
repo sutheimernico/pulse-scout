@@ -98,18 +98,23 @@ class PassReport:
 
     @property
     def prefix_cache_ratio(self) -> float | None:
-        """How much of the shared prefix later calls skipped, 0,0 (none) to 1,0 (all).
+        """How much prompt-intake time later calls saved, 0,0 (none) to 1,0 (all).
 
-        Ollama only counts the tokens it actually evaluated, so a working prefix cache shows up
-        as a sharp drop in `prompt_eval_count` from the first call to the rest. Needs at least
-        three calls to mean anything.
+        Measured in **time**, not in tokens. Ollama's `prompt_eval_count` reports the full
+        prompt length on every call whether or not the prefix was cached — verified directly
+        on 2026-09-20: three consecutive calls sharing a 381-token system block all reported
+        `prompt_eval_count=381`, while `prompt_eval_duration` fell from 8,43 s to 0,34 s to
+        0,22 s. Counting tokens therefore reports "no cache" even when the cache is working
+        perfectly, which is exactly the wrong conclusion to draw about the scoring budget.
+
+        Needs at least three calls to mean anything.
         """
         if len(self.calls) < 3:
             return None
-        first = self.calls[0].prompt_tokens
+        first = self.calls[0].prompt_seconds
         if first <= 0:
             return None
-        later = statistics.median(call.prompt_tokens for call in self.calls[1:])
+        later = statistics.median(call.prompt_seconds for call in self.calls[1:])
         return max(0.0, min(1.0, 1.0 - later / first))
 
     def as_dict(self) -> dict[str, Any]:
@@ -125,8 +130,11 @@ class PassReport:
             "prefix_cache_ratio": (
                 None if self.prefix_cache_ratio is None else round(self.prefix_cache_ratio, 3)
             ),
-            # Per-call intake, so the cache verdict above can be checked rather than believed.
+            # Per-call intake, so the cache verdict above can be checked rather than
+            # believed. The token counts are reported by Ollama regardless of caching;
+            # the seconds are what actually move.
             "prompt_tokens_per_call": [call.prompt_tokens for call in self.calls],
+            "prompt_seconds_per_call": [round(call.prompt_seconds, 3) for call in self.calls],
         }
 
 
