@@ -143,6 +143,13 @@ def test_normalise_title_drops_noise_but_keeps_version_numbers() -> None:
     assert "hn" not in tokens
 
 
+def test_a_single_digit_is_kept_because_it_discriminates() -> None:
+    """'Story 1' and 'Story 2' are two stories; dropping short tokens merged them."""
+    assert normalise_title("Story number 1") != normalise_title("Story number 2")
+    assert cluster_items([item("Story number 1"), item("Story number 2")]) != []
+    assert len(cluster_items([item("Story number 1"), item("Story number 2")])) == 2
+
+
 def test_normalise_title_never_returns_nothing() -> None:
     """A headline made entirely of stopwords must still be comparable."""
     assert normalise_title("How is it") != frozenset()

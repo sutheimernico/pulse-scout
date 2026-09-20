@@ -55,7 +55,13 @@ def normalise_title(title: str) -> frozenset[str]:
     stripped = _SITE_PREFIX.sub("", title.strip())
     raw = _PUNCTUATION.sub(" ", stripped.casefold()).split()
     words = [trimmed for word in raw if (trimmed := _EDGE_PUNCTUATION.sub("", word))]
-    tokens = {word for word in words if word not in _STOPWORDS and len(word) > 1}
+    # Single characters are noise ("a", "I") — except digits, which are the difference
+    # between "Python 3" and "Python 4" and must never be thrown away.
+    tokens = {
+        word
+        for word in words
+        if word not in _STOPWORDS and (len(word) > 1 or word.isdigit())
+    }
     return frozenset(tokens or words)
 
 
