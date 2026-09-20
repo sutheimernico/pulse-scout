@@ -18,3 +18,12 @@ One line per iteration. Newest last.
   re-measurement. Correction to our own instrument: `prompt_eval_count` reports the full prompt
   whether or not the prefix was cached, so the cache metric now measures time (8,43 s → 0,22 s
   on an identical prefix — the cache does work).
+- 2026-09-20 — T18: first real end-to-end run against live sources with qwen2.5:7b, 260 s total
+  (396 seen → 1 new, because the seen-set had already absorbed the day's items; writer 156
+  tokens in 229 s; validator passed; digest written). Machinery honest — the digest itself says
+  "Ruhiger Tag: nur 1 von 5 Plätzen" and that it was built without the model's scoring pass.
+  Content is finding F9 in the flesh: the model turned "agreeing to slow AI development" into
+  "agreed to stop it" and supplied a motive absent from the source, and the relevance line was
+  content-free. No validator can catch that. **Needs Nico: read that digest before the
+  five-day trial starts.** Stopped at the phase boundary — phases 1 and 2 complete and
+  verified, phase 3 (API + PWA) untouched and open in PLAN.md.
