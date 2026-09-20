@@ -108,10 +108,12 @@ def run_funnel(
         sources_ok=len(report.outcomes) - len(report.failed),
         sources_failed=len(report.failed),
     )
+    # A real timestamp: `now` is the run's logical start, and a run that took eight minutes
+    # must not record itself as having finished the moment it began.
     repo.finish_run(
         connection,
         run_id,
-        now=datetime.now(UTC) if now is None else now,
+        now=datetime.now(UTC),
         counters=counters.as_counters(),
         notes=report.summary_line(),
     )
