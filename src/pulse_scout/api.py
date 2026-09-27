@@ -78,7 +78,9 @@ def create_app(
             request: Request, call_next: Callable[[Request], Awaitable[Response]]
         ) -> Response:
             supplied = _supplied_token(request)
-            valid = bool(supplied) and hmac.compare_digest(supplied, token)
+            # Bytes, not str: compare_digest raises on non-ASCII str, and a junk ?token=ü
+            # must be a 401, not a 500.
+            valid = bool(supplied) and hmac.compare_digest(supplied.encode(), token.encode())
             if request.url.path.startswith("/api/") and not valid:
                 return JSONResponse({"detail": "Nicht autorisiert."}, status_code=401)
             response = await call_next(request)

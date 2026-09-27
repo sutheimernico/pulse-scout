@@ -189,3 +189,8 @@ def test_the_env_file_is_read_without_a_dependency(tmp_path: Path) -> None:
     assert read_env_file(env) == {"PULSE_DASH_TOKEN": "abc", "PULSE_DASH_PORT": "8430",
                                   "QUOTED": "x y"}
     assert read_env_file(tmp_path / "missing") == {}
+
+
+def test_a_non_ascii_token_is_a_refusal_not_a_crash(db: Path, tmp_path: Path) -> None:
+    client = client_for(db, tmp_path, token=TOKEN)
+    assert client.get("/api/digest/latest?token=%C3%BC").status_code == 401
