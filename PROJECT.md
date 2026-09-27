@@ -92,6 +92,12 @@ non-consecutive days.
 
 ## Status
 
+**2026-09-27 — phases 3 and 4 built; stage 1 runs daily.** A fact check now re-reads every
+headline and body sentence against its source before a digest is stored (D14). The API and
+PWA are up on the phone via Tailscale (D15), the evening timer is installed, and the
+five-day observation is prepared and waiting for Nico. Details: the plan's outcome section
+and `docs/ops.md`.
+
 **2026-09-20 — phases 1 and 2 built.** Implementation plan written
 (`docs/superpowers/plans/2026-09-20-pulse-scout-v1.md`, 25 tasks) and tasks T1–T17 delivered.
 The pipeline runs end to end. Phase 3 (API and PWA) and phase 4 (timer) are next.
@@ -115,8 +121,9 @@ advisory feeds from home; re-run the throughput benchmark on an idle machine (AD
 - **Phase 0** — scaffold, spec, verified source list. Done 2026-08-07.
 - **Phase 1** — fetch and dedupe, no model involved. Done 2026-09-20, live-verified.
 - **Phase 2** — scoring and writing; the first real digest on disk. Done 2026-09-20 (T13–T17).
-- **Phase 3** — API and PWA; the first digest on the phone. ← current
-- **Phase 4** — timer, catch-up for missed runs, five days of daily use.
+- **Phase 3** — API and PWA; the first digest on the phone. Done 2026-09-27.
+- **Phase 4** — timer, catch-up for missed runs, five days of daily use. Timer done
+  2026-09-27; the five days are Nico's. ← current
 - **Phase 5** — stage 2: embeddings, threads, day counters, Sunday arc.
 
 ## Working method
@@ -150,6 +157,8 @@ than none. Update the script if the phase logic stops matching reality.
 | D11 | 2026-09-20 | Pflicht is *up to* five. Below the model's threshold a slot stays empty and the digest says so, rather than being filled to reach a round number |
 | D12 | 2026-09-20 | The writer's output is validated mechanically: every judgement must name a fetched item, and every number in the prose must appear in that item's own text. A failure fails the run |
 | D13 | 2026-09-20 | Phases 1–2 add no runtime dependencies. urllib, ElementTree, json, sqlite3, tomllib. FastAPI and uvicorn enter with phase 3 |
+| D14 | 2026-09-27 | Every headline and body sentence is re-checked against its source by qwen2.5:7b (yes/no). Unsupported sentences are dropped, never rephrased; a card with nothing left shows the source's first sentence, marked. "Darum geht's dich an" and the thread stay unchecked. Measured, not assumed: `data/benchmarks/2026-09-27-faithfulness-*`. *(Claude, autonomous session — Nico may revoke.)* |
+| D15 | 2026-09-27 | Phone access is `tailscale serve` HTTPS on :8443 in front of 127.0.0.1:8430 (443 belongs to equity-scout). The token gate has no loopback exception, because the proxy arrives from 127.0.0.1. *(Claude, autonomous session — Nico may revoke.)* |
 
 ## §Open inputs (Needs Nico)
 

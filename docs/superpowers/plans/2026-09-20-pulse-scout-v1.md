@@ -595,3 +595,119 @@ traded that for something half-built.
 4. **Reddit and CISA from home.** Unchanged. Note that the CISA *KEV JSON* does work from here;
    it was the other CISA endpoints that were blocked.
 5. **`ollama pull nomic-embed-text`** before stage 2. Free, ~270 MB, but a local download.
+
+---
+
+## 10 · Outcome, second session (2026-09-27): fact check, phase 3, phase 4
+
+*Written 2026-09-27 by Claude (autonomous session on `autopilot/work`).*
+
+### What was built
+
+11 commits after `ac5b8fe`; nothing pushed, no remote. Gate at the end: **359 pytest green**
+(295 before), `ruff check .` clean; frontend **20 vitest green** (none before), `tsc` + `vite
+build` clean.
+
+| Task | Commit | What |
+|---|---|---|
+| T18b (new) | `1ba9259`, `da46c52`, `4ba899b` | Faithfulness guard + labelled eval set + dropped-sentence record |
+| — | `87f69ac` | Writer accepts `"[a1]"` — qwen2.5:7b echoed the prompt's brackets on 12 items, which the validator rejected as unknown ids |
+| T19 | `2059080`, `4c9a881` | FastAPI read-only API, fail-closed token gate, no loopback exception |
+| T20 | `4ccacae` | React 19 + Vite PWA from the mockup |
+| T21 | `d64a4e4` | Manifest, icons, module service worker, labelled offline read |
+| T22 | `bab3255` | systemd timer 20:30 `Persistent=true`, `daily.sh` (flock, Ollama wait, `--skip-if-built`), web unit, `docs/ops.md` |
+| — | `b64db46` | Run stats (incl. D-P9's rank correlation, which was only printed) stored with the digest |
+| T23 prep | `00177a7` | Checklist, empty log, `scripts/observe.py` |
+
+### The fact check (T18b) — what it does and what it measured
+
+Every headline and body sentence goes back to `qwen2.5:7b` as a one-word question against the
+source text the writer saw. NO or an unreadable answer drops the sentence; nothing is
+rephrased. A body with nothing left shows the source's first sentence, marked "Originaltext der
+Quelle"; a rejected headline becomes the source title. The digest says how many were dropped
+and stores which. "Darum geht's dich an" and the thread are interpretation and stay unchecked.
+
+Labelled set: `data/eval/faithfulness_labels.json`, 119 sentences, no third-party text (sources
+by `item_key`, read from the local DB). Kinds: the 2026-09-20 card (3), real writer output
+over 12 items (36), hand-written meaning changes (44), and a **held-out** second writer run
+over 12 other items (36), labelled and scored only after the prompt was frozen.
+
+| Checker | Unfaithful caught | Faithful dropped | Held-out: caught / dropped | s/sentence |
+|---|---|---|---|---|
+| 7b, prompt v1 (first 83 labels) | 32/32 | 16/39 | — | 3,0 |
+| **7b, prompt v2 (shipped)** | **36/37** | **13/62** (7 of them headlines → source title) | **4/5 · 5/23** | 3,1 |
+| 1.5b, prompt v2 | 2/37 | 0/62 | 0/5 · 0/23 | 1,3 |
+
+Interpretation filler inside the body ("Dies könnte … nützlich sein", 20 sentences): all 20
+dropped by the 7b checker. The 2026-09-20 failure ("slow" → "stop") is caught.
+
+**How much to trust that.** Optimistic, for three reasons: the labels are Claude's and not
+yet reviewed by Nico; the hand-written perturbations come from the same author as the prompt
+and are cruder than real errors; and there are only 9 real unfaithful model sentences in the
+set. The one untuned number is the held-out row: 4 of 5, with the miss a borderline vendor
+claim stated as fact.
+
+**What production showed the same day.** The first scheduled-path run (below) checked 10
+sentences and dropped 1 (a headline; which one was not yet recorded — fixed in `4ba899b`). By
+Claude's reading of the 9 that shipped, 7 are faithful and 2 are vague distortions that
+passed: "Es gibt Diskussionen über die Sichtbarkeit von OpenAI-Inhalten auf Hacker News" for
+*OpenAI feared the "optics" of what might appear on Hacker News*, and "AI-Modelle … werden
+… verkauft" for *marketplaces selling access to AI models*. The guard stops a changed verb
+or an invented claim; it does not stop a vague paraphrase that drifts. That is the honest
+limit of a same-size yes/no checker.
+
+**A correction to the first outcome (§9, T18).** The 2026-09-20 card did not invent its
+motive: the source summary says the companies agreed to slow development "for safety
+reasons". Only "slow" → "stop" was wrong. The headline alone did not carry the reason, which is
+probably how the first session read it.
+
+### End to end, for real
+
+`systemctl --user start pulse-scout.service` at 14:01 — the exact path the timer takes — at a
+load average of 20–30 from other sessions:
+
+```
+funnel: 594 gesichtet → 40 Kandidaten in 30s
+scoring: 40 rated in 158s, 0 unparseable, rank correlation 0.70
+writing: 547 tokens in 184s (attempt 2)
+checking: 10 checked, 1 rejected, 0 cards fell back to the source text, in 67s
+594 gesichtet → 5 für dich · 1:32 Lesezeit     — 750 s total
+```
+
+Served by `pulse-scout-web.service` on `0.0.0.0:8430`, token-gated (401 without, 200 with, on
+localhost, on `<tailscale-ip>:8430` and on `https://<host>.<tailnet>.ts.net:8443` via
+`tailscale serve`). Rendered in headless Chromium at 390 px; offline reload shows the stored
+digest labelled with its fetch time. **Not verified: a real phone** — that is Nico's first
+step. Because today's digest exists, tonight's 20:30 run will skip; the first scheduled build
+is 2026-09-28 20:30.
+
+### Deviations from the plan as written
+
+| # | Deviation | Why |
+|---|---|---|
+| 1 | T18b inserted before T19 | The first digest was wrong in a way no existing check could see; shipping it to the phone first would have put the known bug in Nico's hand. |
+| 2 | `pulse-scout-web.service` added in T22 | The plan had `serve.py` but nothing that keeps it running; the phone needs it up. `--require-token` so it cannot start open behind the proxy. |
+| 3 | HTTPS on port **8443** via `tailscale serve` (D15) | Service workers and install need a secure context; 443 on this node belongs to equity-scout. |
+| 4 | Module service worker, logic in `public/sw-strategy.js` | So the offline decision is unit-tested without a bundler plugin. Needs a Chromium-based browser (Chrome on Android is). |
+| 5 | Run stats stored with the digest | D-P9 said "persist"; T14 only printed. T23 needs the numbers. |
+| 6 | `httpx2`, not `httpx`, for the TestClient | Starlette 1.7 deprecates httpx and names httpx2. |
+
+### Found, not fixed (named for the next session)
+
+- **The writer ignores "German" for headlines** on longer inputs: all 24 harvested headlines
+  were English title fragments (today's 5-card run was mostly German). Prompt work, measured.
+- **Body sentence 2 is usually filler** ("Dies könnte … sein"): 20 of 24 harvested cards. The
+  fact check drops it, so cards end up one sentence long — shorter, not wrong.
+- **The number check rejects German decimals**: "2,8 Sekunden" for a source's "2.8 seconds"
+  counts as an invented number, so a correct German sentence can fail a run.
+- **Why the writer's first attempt failed today is not logged** — `write_digest` retries
+  silently. One line of logging would make attempt-2 runs diagnosable.
+- **"Darum geht's dich an" is still generic** (F9): "Du solltest dich für die Diskussionen
+  interessieren …". Unchanged by anything here.
+- `npm audit`: 2 moderate advisories in vitest's dev-only dependency tree.
+
+### What remains
+
+- **T23** — five days on the phone, Nico's (prepared in `docs/observations/`).
+- **T24/T25** — not started, deliberately: stage 2 waits for stage 1 to run daily (§6) and
+  for `ollama pull nomic-embed-text`.

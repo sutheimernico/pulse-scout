@@ -5,13 +5,28 @@ local machine and costs nothing to operate.
 
 ## Status
 
-**2026-09-20 — phases 1 and 2 built.** The pipeline runs end to end: fetch, dedupe, rank,
-score, write, store. The web interface (phase 3) and the timer (phase 4) are not built yet, so
-today the digest is a Markdown file rather than something on a phone.
+**2026-09-27 — stage 1 is built and running.** The pipeline fetches, dedupes, ranks, scores,
+writes, fact-checks and stores a digest every evening at 20:30 (systemd user timer, catches up
+missed days); a PWA serves it to the phone, offline too — verified in headless Chromium, not
+yet on the real phone. What is left for stage 1 is that, and the five-day observation, which
+only Nico can do (`docs/observations/2026-09-27-five-days.md`).
 
-Verified against the live source list on 2026-09-20: 60 sources, 570 items in the 72-hour
-window, 40 candidates out, 0 failures. Plan and backlog:
-`docs/superpowers/plans/2026-09-20-pulse-scout-v1.md` and `PLAN.md`.
+Plan and backlog: `docs/superpowers/plans/2026-09-20-pulse-scout-v1.md` and `PLAN.md`.
+Operations — timer, server, phone access, logs, undo: `docs/ops.md`.
+
+## On the phone
+
+With Tailscale on, open once:
+
+    https://<host>.<tailnet>.ts.net:8443/?token=<TOKEN>
+
+`<TOKEN>` is `PULSE_DASH_TOKEN` from `.env` on the laptop (`grep PULSE_DASH_TOKEN .env`). The
+server turns it into a cookie and the page removes it from the address bar. Then Chrome menu →
+*App installieren*. The app shows the latest digest; without a connection, the last one it
+loaded, marked "Offline — gespeicherte Fassung, zuletzt geladen am …".
+
+`http://<tailscale-ip>:8430/?token=<TOKEN>` (the WSL node's Tailscale IP) works as an
+online-only fallback: plain HTTP allows no service worker, so no offline copy and no install.
 
 ## What makes it different from a news reader
 
@@ -35,6 +50,14 @@ morning as if nothing happened before it.
 - **The model's output is checked mechanically before anyone sees it.** Every judgement must
   name an item that was actually fetched, and every number in the prose must occur in that
   item's own title or summary. A draft that fails either check fails the run.
+- **Every factual sentence is checked against its source.** The first real digest passed all
+  of the above and was still wrong ("agreed to slow" became "agreed to stop"). So each
+  headline and body sentence goes back to the model as a yes/no question against the source
+  text; what the source does not support is dropped, and a card with nothing left shows the
+  source's own first sentence, marked "Originaltext der Quelle". On 119 hand-labelled
+  sentences it caught 36 of 37 unfaithful ones and dropped 13 of 62 faithful ones
+  (`data/benchmarks/2026-09-27-faithfulness-qwen2.5-7b-v2.json`). It does not check
+  "Darum geht's dich an" or the Roter Faden — those are interpretation, not report.
 - **The funnel count on screen is real.** It reports the actual number of items seen and kept.
 - **Sample data is always labelled as sample data**, in the interface and in any report.
 
@@ -89,6 +112,19 @@ uv run python scripts/build_digest.py --skip-scoring   # skip the 1.5b pass
 
 A run that produces nothing usable exits non-zero and writes nothing. That is deliberate: the
 previous digest stays the latest one rather than being replaced by something plausible.
+
+The phone side and the daily run:
+
+```bash
+(cd frontend && npm ci && npm test && npm run build)   # the PWA, served from frontend/dist
+uv run python scripts/serve.py                         # http://127.0.0.1:8430 without a token
+bash scripts/install_systemd.sh                        # timer + web service, see docs/ops.md
+
+# Measure the fact check against the labelled sentences (~6 minutes of CPU).
+uv run python scripts/eval_faithfulness.py
+# The five-day observation table, from the stored digests.
+uv run python scripts/observe.py
+```
 
 ## Stack
 

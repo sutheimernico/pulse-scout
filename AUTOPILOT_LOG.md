@@ -27,3 +27,11 @@ One line per iteration. Newest last.
   content-free. No validator can catch that. **Needs Nico: read that digest before the
   five-day trial starts.** Stopped at the phase boundary — phases 1 and 2 complete and
   verified, phase 3 (API + PWA) untouched and open in PLAN.md.
+- 2026-09-27 — Fact check + phases 3/4 (interactive-autonomous session, 11 commits, 295 → 359
+  pytest, 0 → 20 vitest). T18b: every headline/body sentence re-checked by qwen2.5:7b against
+  its source; on 119 hand-labelled sentences 36/37 unfaithful caught, 13/62 faithful dropped,
+  held-out 4/5; qwen2.5:1.5b useless as checker (2/37). T19 API, T20 PWA, T21 offline/install,
+  T22 timer (20:30, Persistent) + web unit + `tailscale serve` :8443 — installed and verified
+  via the real unit path (750 s at load 20–30). T23 prepared, not started (Nico's five days).
+  T24/T25 deliberately untouched. Correction: the 2026-09-20 "invented motive" was in the
+  source; only slow→stop was wrong.

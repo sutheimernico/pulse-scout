@@ -72,9 +72,12 @@ systemctl --user list-timers pulse-scout.timer         # next and last run
 journalctl --user -u pulse-scout.service -n 80         # the last build's output
 journalctl --user -u pulse-scout-web.service -n 40     # the server
 systemctl --user start pulse-scout.service             # run now (skips if today's exists)
-uv run python scripts/build_digest.py                  # force a rebuild of today's
 tailscale serve status                                 # what the tailnet can reach
 ```
+
+There is no "rebuild today's digest": a second build on the same day finds nothing new — the
+seen-set already holds every item the first one fetched — and writes nothing, so the first
+digest stays. That is the seen-set doing its job, not a failure.
 
 ## Undo (everything this project installed)
 

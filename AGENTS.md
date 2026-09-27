@@ -3,10 +3,11 @@
 Read before changing code. Working method and locked decisions: `CLAUDE.md`.
 Source of truth for spec/decisions: `PROJECT.md`.
 
-> **State as of 2026-09-20:** phases 1 and 2 are built and live-verified — fetch, cache,
-> parse, seen-filter, cluster, rank, score, write, validate, store. `frontend/` and `api.py`
-> are the only rows in the table below that do not exist yet. Plan and backlog:
-> `docs/superpowers/plans/2026-09-20-pulse-scout-v1.md` and `PLAN.md` (next task: T18/T19).
+> **State as of 2026-09-27:** stage 1 is built and scheduled — fetch, cache, parse,
+> seen-filter, cluster, rank, score, write, validate, **fact-check**, store, serve, PWA,
+> timer. Every row in the table below exists. Open: T23 (five-day observation, Nico's) and
+> stage 2 (T24/T25). Plan and backlog: `docs/superpowers/plans/2026-09-20-pulse-scout-v1.md`
+> and `PLAN.md`. Operations: `docs/ops.md`.
 
 ## Agent stance
 
@@ -26,12 +27,13 @@ Source of truth for spec/decisions: `PROJECT.md`.
 | Layer | Directory | Rule |
 |---|---|---|
 | Fetching | `src/pulse_scout/sources/` | Only place that touches the network. `http.py` is the seam; `collect.py` drives the list and owns the failure policy. |
-| Core logic | `src/pulse_scout/core/` | Pure. No network, no Ollama, no filesystem. `canonical`, `dedupe`, `ranking`, `selection`, `validate`, `digest`. |
-| Model calls | `src/pulse_scout/llm/` | Only place that talks to Ollama. `ollama.py` is the seam; `scorer`, `writer`, `prompts` sit on top. |
+| Core logic | `src/pulse_scout/core/` | Pure. No network, no Ollama, no filesystem. `canonical`, `dedupe`, `ranking`, `selection`, `validate`, `faithfulness`, `digest`, `observation`. |
+| Model calls | `src/pulse_scout/llm/` | Only place that talks to Ollama. `ollama.py` is the seam; `scorer`, `writer`, `verifier`, `prompts` sit on top. |
 | Storage | `src/pulse_scout/store/` | SQLite. Schema migrations by `PRAGMA user_version` (currently v2). |
 | Orchestration | `src/pulse_scout/pipeline.py` | Fetch → seen-filter → cluster → rank, plus the funnel counters. |
-| API | `src/pulse_scout/api.py` | **Not built yet (T19).** FastAPI, reads finished digests, **computes nothing.** |
-| Frontend | `frontend/` | **Not built yet (T20).** React + Vite, built to static files, served by the API process. |
+| API | `src/pulse_scout/api.py` | FastAPI, reads finished digests, **computes nothing.** Fail-closed token gate on `/api/*`, no loopback exception (tailscale serve forwards from 127.0.0.1). |
+| Frontend | `frontend/` | React 19 + Vite PWA, built to `frontend/dist`, served by the API process. `public/sw.js` is a hand-written module worker; its decisions live in `public/sw-strategy.js` and are vitest-tested. |
+| Operations | `deploy/`, `scripts/daily.sh`, `scripts/install_systemd.sh` | systemd user units: evening timer (`Persistent=true`) and the always-on web server. `docs/ops.md`. |
 | CLIs | `scripts/` | Thin. Argument parsing plus a call into the pipeline. |
 
 Config is `data/sources.toml`, read with the standard library `tomllib` — no dependency.
@@ -46,7 +48,10 @@ uv run python scripts/fetch_once.py --survey   # every source once; writes data/
 uv run python scripts/run_funnel.py --explain  # the deterministic funnel, seconds, no model
 uv run python scripts/bench_ollama.py          # throughput — run it on an IDLE machine, see ADR 0001
 uv run python scripts/build_digest.py          # the whole pipeline; minutes of CPU
-uv run uvicorn pulse_scout.api:app --port 8430 # (planned, T19) the PWA
+uv run python scripts/serve.py                 # API + PWA on :8430 (loopback without a token)
+uv run python scripts/eval_faithfulness.py     # the fact check against labelled sentences
+uv run python scripts/observe.py               # the five-day observation table
+(cd frontend && npm test && npm run build)     # frontend gate: vitest + tsc + vite build
 ```
 
 Ollama must be running (`http://localhost:11434`). Models used: `qwen2.5:1.5b` for scoring,
@@ -77,3 +82,10 @@ Port 8430 is chosen to stay clear of equity-scout on 8420 and Airflow on 8080.
   actually specifying the scoring prompt. A test guards against that text coming back.
 - **Never widen what the writer may say** without widening `core/validate.py` deliberately.
   Every number in the prose must appear in its source item; that check is the trust promise.
+- **Changing the fact check** → `VERIFY_SYSTEM` in `llm/prompts.py`, then
+  `uv run python scripts/eval_faithfulness.py --write --tag vN` and compare with the recorded
+  runs in `data/benchmarks/`. A prompt change that is not measured is not a change. The
+  `model-heldout` labels were scored only after v2 was frozen — tuning against them spends the
+  only untuned number. `qwen2.5:1.5b` is not a usable checker (2 of 37 caught).
+- **Changing the frontend** → `npm run build` afterwards; the web unit serves `frontend/dist`
+  directly (restart it only if `dist/` did not exist when it started).

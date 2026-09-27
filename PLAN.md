@@ -66,17 +66,28 @@ loop's index into it. Work top to bottom.
       turned "agreeing to slow AI development" into "agreed to stop it" and wrote a
       content-free relevance line. The validator passed it, correctly — nothing checkable
       was invented. See the plan's outcome section.
+- [x] **T18b** (added 2026-09-27) The faithfulness guard — `core/faithfulness.py`,
+      `llm/verifier.py`: every headline and body sentence re-checked against its source by
+      qwen2.5:7b, unsupported ones dropped, source text as the fallback. Measured on 119
+      hand-labelled real sentences (`scripts/eval_faithfulness.py`): 36/37 unfaithful caught,
+      13/62 faithful dropped; held-out 4/5 caught.
 
 ### Phase 3 — API and PWA
 
-- [ ] **T19** `api.py` + `scripts/serve.py` — read-only endpoints, fail-closed token gate (first new deps)
-- [ ] **T20** `frontend/` — React 19 + Vite PWA built from the approved mockup
-- [ ] **T21** Manifest, service worker, offline read of the last digest with a visible timestamp
+- [x] **T19** `api.py` + `scripts/serve.py` — read-only endpoints, fail-closed token gate (first new deps)
+- [x] **T20** `frontend/` — React 19 + Vite PWA built from the approved mockup
+- [x] **T21** Manifest, service worker, offline read of the last digest with a visible timestamp
+      — verified in headless Chromium: worker active, offline reload shows the stored digest
+      labelled with its fetch time.
 
 ### Phase 4 — operation
 
-- [ ] **T22** systemd user timer + idempotent `scripts/daily.sh` + `docs/ops.md`
+- [x] **T22** systemd user timer + idempotent `scripts/daily.sh` + `docs/ops.md`
+      — installed 2026-09-27: `pulse-scout.timer` daily 20:30 (`Persistent=true`) and
+      `pulse-scout-web.service` on :8430, HTTPS via `tailscale serve` on :8443. Undo in `docs/ops.md`.
 - [ ] **T23** Five-day observation log (`docs/observations/`) — **needs Nico's verdict column**
+      — prepared: checklist and empty log in `docs/observations/2026-09-27-five-days.md`,
+      machine columns from `scripts/observe.py`. Not started: the days are Nico's.
 
 ### Phase 5 — stage 2 (threads), only after stage 1 runs daily
 
@@ -85,6 +96,10 @@ loop's index into it. Work top to bottom.
 
 ## Needs Nico (loop cannot do these itself)
 
+- **Install the app on the phone** and run the five days (T23): `docs/observations/2026-09-27-five-days.md`.
+- **Spot-check the fact-check labels** (`data/eval/faithfulness_labels.json`) — Claude wrote
+  them; the guard's measured catch rate is only as good as they are.
+
 - **Re-run `uv run python scripts/bench_ollama.py` on an idle machine.** ADR 0001 —
   every funnel-sizing decision waits on a measurement that is not drowned in contention.
 
@@ -92,7 +107,7 @@ loop's index into it. Work top to bottom.
 - Test Reddit and the CISA advisory feeds from the home network — both fail from the build
   environment with what looks like an IP block rather than a missing key.
 - The five-day verdict after stage 1: does the digest actually get read?
-- **Read one real digest before the five days start** (`data/digests/2026-09-20.md`).
-  The machinery is honest; the prose from the 7B model on a quiet day is thin and, in the
-  first run, subtly wrong in a way no validator can catch.
+- **Read one real digest before the five days start** — now the one from 2026-09-27 in the
+  app (or `data/digests/2026-09-27.md`). The fact check catches changed verbs and invented
+  claims; by Claude's reading two vague paraphrases still got through on that day (plan §10).
 - `ollama pull nomic-embed-text` before phase 5 — free, ~270 MB, but a local download.
