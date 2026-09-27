@@ -102,7 +102,8 @@ def parse_draft(payload: dict) -> tuple[list[Judgement], str]:
             raise WriterError(f"a judgement is a {type(entry).__name__}, not an object")
         judgements.append(
             Judgement(
-                item_id=str(entry.get("item_id", "")).strip(),
+                # The prompt shows ids as "[a1]"; the model sometimes copies the brackets.
+                item_id=str(entry.get("item_id", "")).strip().strip("[]").strip(),
                 headline=str(entry.get("headline", "")).strip(),
                 body=str(entry.get("body", "")).strip(),
                 why_you=str(entry.get("why_you", "")).strip(),

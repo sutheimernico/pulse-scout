@@ -160,3 +160,9 @@ def test_malformed_shapes_are_refused(payload: str) -> None:
 
 def test_extract_json_finds_an_object_surrounded_by_chatter() -> None:
     assert extract_json('Sure!\n{"a": 1}\nHope that helps.') == {"a": 1}
+
+
+def test_an_id_copied_with_its_brackets_still_resolves() -> None:
+    """The prompt shows "[a1]"; with twelve items qwen2.5:7b echoed the brackets (2026-09-27)."""
+    draft = run(GOOD.replace('"a1"', '"[a1]"'))
+    assert draft.judgements[0].item_id == "a1"
