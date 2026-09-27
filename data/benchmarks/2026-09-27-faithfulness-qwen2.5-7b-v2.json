@@ -1,0 +1,163 @@
+{
+  "measured_at": "2026-09-27T13:47:21+02:00",
+  "model": "qwen2.5:7b",
+  "tag": "v2",
+  "system_prompt": "You check one line from a German news briefing against its English source.\n\nThe line may be a headline or a sentence. It may translate, simplify or shorten the source and\nleave details out. Clumsy German is fine. None of that is a reason to say NO.\n\nAnswer NO only if the line says something the source does not say:\n- a different action or outcome (for example \"plans to release\" becoming \"has released\"),\n- a claim clearly stronger than the source's,\n- the wrong company, person, place or product,\n- a reason, number or detail that is not in the source.\nOtherwise answer YES.\n\nAnswer with one word: YES or NO.",
+  "labels_file": "data/eval/faithfulness_labels.json",
+  "missing_items": 0,
+  "seconds": 370.6,
+  "seconds_per_sentence": 3.11,
+  "overall": {
+    "sentences": 99,
+    "unfaithful": 37,
+    "faithful": 62,
+    "caught": 36,
+    "missed": 1,
+    "false_alarms": 13,
+    "catch_rate": 0.973,
+    "false_alarm_rate": 0.21
+  },
+  "clear_cases_only": {
+    "sentences": 93,
+    "unfaithful": 33,
+    "faithful": 60,
+    "caught": 33,
+    "missed": 0,
+    "false_alarms": 12,
+    "catch_rate": 1.0,
+    "false_alarm_rate": 0.2
+  },
+  "by_kind": {
+    "first-digest": {
+      "sentences": 3,
+      "unfaithful": 1,
+      "faithful": 2,
+      "caught": 1,
+      "missed": 0,
+      "false_alarms": 1,
+      "catch_rate": 1.0,
+      "false_alarm_rate": 0.5
+    },
+    "model": {
+      "sentences": 24,
+      "unfaithful": 3,
+      "faithful": 21,
+      "caught": 3,
+      "missed": 0,
+      "false_alarms": 7,
+      "catch_rate": 1.0,
+      "false_alarm_rate": 0.333
+    },
+    "model-heldout": {
+      "sentences": 28,
+      "unfaithful": 5,
+      "faithful": 23,
+      "caught": 4,
+      "missed": 1,
+      "false_alarms": 5,
+      "catch_rate": 0.8,
+      "false_alarm_rate": 0.217
+    },
+    "perturbation": {
+      "sentences": 44,
+      "unfaithful": 28,
+      "faithful": 16,
+      "caught": 28,
+      "missed": 0,
+      "false_alarms": 0,
+      "catch_rate": 1.0,
+      "false_alarm_rate": 0.0
+    }
+  },
+  "interpretation": {
+    "sentences": 20,
+    "kept": 0,
+    "dropped": 20
+  },
+  "wrong_calls": [
+    {
+      "id": "m02",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Azure hat eine neue Funktion hinzugefügt, die es ermöglicht, automatisch ausgeführte Agents zu erstellen."
+    },
+    {
+      "id": "m04",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Malicious npm Packages"
+    },
+    {
+      "id": "h22",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "WaterPlum Hacker"
+    },
+    {
+      "id": "m14",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Die US-Regierung hat eine iranische Börse gesanktioniert, die Bitcoin-Transaktionen durchführt."
+    },
+    {
+      "id": "m17",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Christine Lagarde hat versucht, Binance bei der Erlangung einer Lizenz zu hindern."
+    },
+    {
+      "id": "h26",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Es ist eine neue Sprachzuschriften-API mit doppelter Genauigkeit."
+    },
+    {
+      "id": "m07",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Linux Kernel Race Condition"
+    },
+    {
+      "id": "m28",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Fraud Analysis for Travel Businesses"
+    },
+    {
+      "id": "h20",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Es gibt viele Side Events, die du besuchen kannst."
+    },
+    {
+      "id": "h21",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Es ist eine gute Gelegenheit für Netzwerke und Ideenwechsel."
+    },
+    {
+      "id": "m31",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "AI-Driven Account Takeover"
+    },
+    {
+      "id": "h28",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "CrowdSec Hacking"
+    },
+    {
+      "id": "h29",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Es gibt Berichte über eine Angriff auf CrowdSecs GitHub."
+    },
+    {
+      "id": "p01",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "AI-Kartellklage gegen große Tech-Unternehmen"
+    }
+  ]
+}

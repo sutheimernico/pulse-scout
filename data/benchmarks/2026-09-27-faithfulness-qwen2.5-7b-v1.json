@@ -1,0 +1,156 @@
+{
+  "note": "Prompt v1 (too strict), measured on the first 83 labels - before kind=model-heldout and the borderline flags were added. Kept as the record of why v2 exists.",
+  "measured_at": "2026-09-27T13:29:47+02:00",
+  "model": "qwen2.5:7b",
+  "labels_file": "data/eval/faithfulness_labels.json",
+  "missing_items": 0,
+  "seconds": 252.6,
+  "seconds_per_sentence": 3.04,
+  "overall": {
+    "sentences": 71,
+    "unfaithful": 32,
+    "faithful": 39,
+    "caught": 32,
+    "missed": 0,
+    "false_alarms": 16,
+    "catch_rate": 1.0,
+    "false_alarm_rate": 0.41
+  },
+  "by_kind": {
+    "first-digest": {
+      "sentences": 3,
+      "unfaithful": 1,
+      "faithful": 2,
+      "caught": 1,
+      "missed": 0,
+      "false_alarms": 1,
+      "catch_rate": 1.0,
+      "false_alarm_rate": 0.5
+    },
+    "model": {
+      "sentences": 24,
+      "unfaithful": 3,
+      "faithful": 21,
+      "caught": 3,
+      "missed": 0,
+      "false_alarms": 14,
+      "catch_rate": 1.0,
+      "false_alarm_rate": 0.667
+    },
+    "perturbation": {
+      "sentences": 44,
+      "unfaithful": 28,
+      "faithful": 16,
+      "caught": 28,
+      "missed": 0,
+      "false_alarms": 1,
+      "catch_rate": 1.0,
+      "false_alarm_rate": 0.062
+    }
+  },
+  "interpretation": {
+    "sentences": 12,
+    "kept": 0,
+    "dropped": 12
+  },
+  "wrong_calls": [
+    {
+      "id": "m02",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Azure hat eine neue Funktion hinzugefügt, die es ermöglicht, automatisch ausgeführte Agents zu erstellen."
+    },
+    {
+      "id": "m04",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Malicious npm Packages"
+    },
+    {
+      "id": "m05",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Threat Actors nutzen Malware, die sich im normalen Laufzeiten des Pakets versteckt."
+    },
+    {
+      "id": "m10",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "RAM Reduction with Math"
+    },
+    {
+      "id": "m11",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Cloudflare hat seine Ressourcen signifikant reduziert, indem es statistische Methoden anwendete."
+    },
+    {
+      "id": "m13",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "US Sanctions on Iranian Exchange"
+    },
+    {
+      "id": "m14",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Die US-Regierung hat eine iranische Börse gesanktioniert, die Bitcoin-Transaktionen durchführt."
+    },
+    {
+      "id": "p22",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Laut Wall Street Journal hat EZB-Präsidentin Christine Lagarde dabei geholfen, eine MiCA-Lizenz für Binance in Griechenland zu verhindern."
+    },
+    {
+      "id": "m17",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Christine Lagarde hat versucht, Binance bei der Erlangung einer Lizenz zu hindern."
+    },
+    {
+      "id": "m23",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Alibaba hat eine AI-basierte Code-Review-CLI freigegeben, die automatische Prüfungen durchführt."
+    },
+    {
+      "id": "m20",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Google hat den Agent Development Kit für Kotlin vorgestellt, der nun mit Python und Java auf gleicher Ebene ist."
+    },
+    {
+      "id": "m07",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Linux Kernel Race Condition"
+    },
+    {
+      "id": "m28",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Fraud Analysis for Travel Businesses"
+    },
+    {
+      "id": "m29",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "Stripe hat Daten zu den Angriffen auf Reiseunternehmen analysiert und zeigt, dass es bei diesen Unternehmen zu einem Anstieg von Betrug versucht wird."
+    },
+    {
+      "id": "m31",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "AI-Driven Account Takeover"
+    },
+    {
+      "id": "p01",
+      "label": "faithful",
+      "answer": "NO",
+      "sentence": "AI-Kartellklage gegen große Tech-Unternehmen"
+    }
+  ],
+  "tag": "v1",
+  "system_prompt": "You check one German sentence from a news briefing against its English source.\n\nAnswer YES only if the source says what the sentence says.\nAnswer NO if the sentence changes the meaning in any way: a different action (for example\n\"plans to release\" becoming \"has released\"), a stronger or weaker claim, a wrong actor, or a\nreason, number, name or detail that the source does not contain.\nA shorter sentence that leaves details out is fine.\n\nAnswer with one word: YES or NO."
+}

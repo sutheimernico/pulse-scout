@@ -1,0 +1,289 @@
+{
+  "measured_at": "2026-09-27T13:50:25+02:00",
+  "model": "qwen2.5:1.5b",
+  "tag": "v2",
+  "system_prompt": "You check one line from a German news briefing against its English source.\n\nThe line may be a headline or a sentence. It may translate, simplify or shorten the source and\nleave details out. Clumsy German is fine. None of that is a reason to say NO.\n\nAnswer NO only if the line says something the source does not say:\n- a different action or outcome (for example \"plans to release\" becoming \"has released\"),\n- a claim clearly stronger than the source's,\n- the wrong company, person, place or product,\n- a reason, number or detail that is not in the source.\nOtherwise answer YES.\n\nAnswer with one word: YES or NO.",
+  "labels_file": "data/eval/faithfulness_labels.json",
+  "missing_items": 0,
+  "seconds": 157.0,
+  "seconds_per_sentence": 1.32,
+  "overall": {
+    "sentences": 99,
+    "unfaithful": 37,
+    "faithful": 62,
+    "caught": 2,
+    "missed": 35,
+    "false_alarms": 0,
+    "catch_rate": 0.054,
+    "false_alarm_rate": 0.0
+  },
+  "clear_cases_only": {
+    "sentences": 93,
+    "unfaithful": 33,
+    "faithful": 60,
+    "caught": 2,
+    "missed": 31,
+    "false_alarms": 0,
+    "catch_rate": 0.061,
+    "false_alarm_rate": 0.0
+  },
+  "by_kind": {
+    "first-digest": {
+      "sentences": 3,
+      "unfaithful": 1,
+      "faithful": 2,
+      "caught": 0,
+      "missed": 1,
+      "false_alarms": 0,
+      "catch_rate": 0.0,
+      "false_alarm_rate": 0.0
+    },
+    "model": {
+      "sentences": 24,
+      "unfaithful": 3,
+      "faithful": 21,
+      "caught": 0,
+      "missed": 3,
+      "false_alarms": 0,
+      "catch_rate": 0.0,
+      "false_alarm_rate": 0.0
+    },
+    "model-heldout": {
+      "sentences": 28,
+      "unfaithful": 5,
+      "faithful": 23,
+      "caught": 0,
+      "missed": 5,
+      "false_alarms": 0,
+      "catch_rate": 0.0,
+      "false_alarm_rate": 0.0
+    },
+    "perturbation": {
+      "sentences": 44,
+      "unfaithful": 28,
+      "faithful": 16,
+      "caught": 2,
+      "missed": 26,
+      "false_alarms": 0,
+      "catch_rate": 0.071,
+      "false_alarm_rate": 0.0
+    }
+  },
+  "interpretation": {
+    "sentences": 20,
+    "kept": 19,
+    "dropped": 1
+  },
+  "wrong_calls": [
+    {
+      "id": "p07",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Foundry Routines ist ab sofort allgemein verfügbar und startet veröffentlichte Agenten automatisch."
+    },
+    {
+      "id": "p08",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Foundry Routines ersetzt Azure Logic Apps als Auslöser für Agenten."
+    },
+    {
+      "id": "h33",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Es bietet höhere Sicherheit und Zuverlässigkeit."
+    },
+    {
+      "id": "h15",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Es verbessert die Leistung und Zuverlässigkeit deiner Datenbanken."
+    },
+    {
+      "id": "h16",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "FPGA Merger Review"
+    },
+    {
+      "id": "p10",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Die Fed hat drei Änderungen an ihren Stresstests beschlossen."
+    },
+    {
+      "id": "p13",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Die Angreifer verstecken den Schadcode in den Installationsskripten des Pakets indexed-btree."
+    },
+    {
+      "id": "p14",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "npm hat das Paket indexed-btree inzwischen entfernt."
+    },
+    {
+      "id": "p18",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Cloudflare hat den RAM-Verbrauch seines gesamten Netzwerks halbiert."
+    },
+    {
+      "id": "p19",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Dafür hat Cloudflare den Dienst von Rust nach Go portiert."
+    },
+    {
+      "id": "p21",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "BitBank hat nach eigenen Angaben Bitcoin im Wert von Hunderten Millionen Dollar an die Revolutionsgarden weitergeleitet."
+    },
+    {
+      "id": "p23",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Lagarde hat verhindert, dass Binance in Frankreich eine MiCA-Lizenz bekommt."
+    },
+    {
+      "id": "p24",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Die EZB hat Binance offiziell die Lizenz entzogen."
+    },
+    {
+      "id": "m16",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "ECB Blocks Binance License"
+    },
+    {
+      "id": "p29",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Alibaba bietet OpenCodeReview als kostenpflichtigen Cloud-Dienst an."
+    },
+    {
+      "id": "p30",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Das Werkzeug verzichtet komplett auf feste Regeln und überlässt die Prüfung einem Sprachmodell."
+    },
+    {
+      "id": "p26",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Google plant, das Agent Development Kit für Kotlin im kommenden Jahr zu veröffentlichen."
+    },
+    {
+      "id": "h26",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Es ist eine neue Sprachzuschriften-API mit doppelter Genauigkeit."
+    },
+    {
+      "id": "p32",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Das Modell erhöht die durchschnittliche Verzögerung von 2,3 auf 2,8 Sekunden."
+    },
+    {
+      "id": "p33",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Qwen3.8-LiveTranslate läuft vollständig auf dem Smartphone."
+    },
+    {
+      "id": "h03",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Es verbessert die Stabilität und Flexibilität der Plattform."
+    },
+    {
+      "id": "p16",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Die Lücke erlaubt Angreifern, aus der Ferne Root-Rechte zu erlangen."
+    },
+    {
+      "id": "m08",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Ein Ressourcenkonflikt im Linux-Kernel kann zu unvorhergesehenen Datenverlusten führen."
+    },
+    {
+      "id": "p35",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Starling ist in Rust geschrieben und nutzt einen eigenen Wayland-Compositor."
+    },
+    {
+      "id": "p36",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Mit Version 0.5 ist der 3D-Modus der neue Standard des Desktops."
+    },
+    {
+      "id": "p38",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Laut Stripe sind Betrugsversuche gegen Reiseunternehmen im vergangenen Jahr auf ein Vierjahrestief gefallen."
+    },
+    {
+      "id": "p39",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Stripe hat dafür Zahlungen von Banken und Versicherern ausgewertet."
+    },
+    {
+      "id": "p41",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Dario Amodei hat angekündigt, dass Anthropic die Entwicklung neuer Modelle einstellt."
+    },
+    {
+      "id": "p42",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Der Vorschlag setzt auf staatliche Aufsichtsbehörden statt auf unabhängige Prüfer."
+    },
+    {
+      "id": "p44",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Claude Opus 5 hat eigenständig die Konten von OpenAI-Mitarbeitern angegriffen."
+    },
+    {
+      "id": "p45",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Die Forscher übernahmen Konten von Anthropic-Mitarbeitern."
+    },
+    {
+      "id": "p03",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Sie haben sich auf Sicherheitsgründe hin einverstanden erklärt, die Entwicklung von KI einzustellen."
+    },
+    {
+      "id": "p05",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Die Unternehmen haben vereinbart, die KI-Entwicklung zu beschleunigen."
+    },
+    {
+      "id": "m35",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Vier große KI-Unternehmen haben sich auf eine gemeinsame Strategie geeinigt, um den AI-Bereich zu regulieren."
+    },
+    {
+      "id": "p47",
+      "label": "unfaithful",
+      "answer": "YES",
+      "sentence": "Die Tasthaar-Drohnen werden bereits von Feuerwehren eingesetzt."
+    }
+  ]
+}

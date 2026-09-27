@@ -1,0 +1,1077 @@
+{
+ "about": "Hand-labelled sentences for the faithfulness guard. No third-party text: each entry names its source by item_key, and scripts/eval_faithfulness.py reads the source from the local database. kind=first-digest: the 2026-09-20 card. kind=model: real qwen2.5:7b output from the shipped writer prompt over 12 real items (2026-09-27). kind=perturbation: hand-written, one faithful paraphrase plus deliberate meaning changes per item. label=interpretation: a sentence that makes no claim about the source ('Dies könnte ... nützlich sein'); scored separately. kind=model-heldout: a second writer run over 12 other real items, labelled and scored only AFTER the checker prompt was frozen (v2) - the one number here that was not tuned against. borderline=true marks labels a second reader could reasonably flip.",
+ "labelled_by": "Claude (autonomous session, 2026-09-27) - not yet reviewed by Nico",
+ "sentences": [
+  {
+   "id": "p01",
+   "item_key": "https://tomshardware.com/tech-industry/big-tech/anthropic-openai-spacexai-and-google-face-antitrust-lawsuit-for-agreeing-to-slow-ai-development-plaintiffs-say-plan-has-been-in-motion-for-months-before-calls-agreement-self-serving",
+   "sentence": "AI-Kartellklage gegen große Tech-Unternehmen",
+   "label": "faithful",
+   "kind": "first-digest",
+   "note": "headline of the 2026-09-20 card",
+   "borderline": false
+  },
+  {
+   "id": "p02",
+   "item_key": "https://tomshardware.com/tech-industry/big-tech/anthropic-openai-spacexai-and-google-face-antitrust-lawsuit-for-agreeing-to-slow-ai-development-plaintiffs-say-plan-has-been-in-motion-for-months-before-calls-agreement-self-serving",
+   "sentence": "Ein Klageschreiben wurde gegen Anthropic, OpenAI, SpaceXAI und Google eingereicht.",
+   "label": "faithful",
+   "kind": "first-digest",
+   "note": "a proposed class action was lodged against the four",
+   "borderline": false
+  },
+  {
+   "id": "p03",
+   "item_key": "https://tomshardware.com/tech-industry/big-tech/anthropic-openai-spacexai-and-google-face-antitrust-lawsuit-for-agreeing-to-slow-ai-development-plaintiffs-say-plan-has-been-in-motion-for-months-before-calls-agreement-self-serving",
+   "sentence": "Sie haben sich auf Sicherheitsgründe hin einverstanden erklärt, die Entwicklung von KI einzustellen.",
+   "label": "unfaithful",
+   "kind": "first-digest",
+   "note": "THE failure: source says slow, sentence says stop. The safety motive itself is in the source",
+   "borderline": false
+  },
+  {
+   "id": "p04",
+   "item_key": "https://tomshardware.com/tech-industry/big-tech/anthropic-openai-spacexai-and-google-face-antitrust-lawsuit-for-agreeing-to-slow-ai-development-plaintiffs-say-plan-has-been-in-motion-for-months-before-calls-agreement-self-serving",
+   "sentence": "Die Kläger nennen die Vereinbarung eigennützig.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "title: calls agreement self-serving",
+   "borderline": false
+  },
+  {
+   "id": "p05",
+   "item_key": "https://tomshardware.com/tech-industry/big-tech/anthropic-openai-spacexai-and-google-face-antitrust-lawsuit-for-agreeing-to-slow-ai-development-plaintiffs-say-plan-has-been-in-motion-for-months-before-calls-agreement-self-serving",
+   "sentence": "Die Unternehmen haben vereinbart, die KI-Entwicklung zu beschleunigen.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "inverted action",
+   "borderline": false
+  },
+  {
+   "id": "p06",
+   "item_key": "https://azure.microsoft.com/updates?id=563536",
+   "sentence": "Der Foundry Agent Service bekommt in einer öffentlichen Vorschau Foundry Routines, mit denen veröffentlichte Agenten automatisch ausgelöst werden.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p07",
+   "item_key": "https://azure.microsoft.com/updates?id=563536",
+   "sentence": "Foundry Routines ist ab sofort allgemein verfügbar und startet veröffentlichte Agenten automatisch.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "preview became GA",
+   "borderline": false
+  },
+  {
+   "id": "p08",
+   "item_key": "https://azure.microsoft.com/updates?id=563536",
+   "sentence": "Foundry Routines ersetzt Azure Logic Apps als Auslöser für Agenten.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "invented product claim",
+   "borderline": false
+  },
+  {
+   "id": "p09",
+   "item_key": "https://bankingdive.com/news/fed-michelle-bowman-stress-test-changes-svb-failure-review/830794",
+   "sentence": "Michelle Bowman, bei der Fed für die Aufsicht zuständig, hat drei mögliche Änderungen an den Stresstests skizziert.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p10",
+   "item_key": "https://bankingdive.com/news/fed-michelle-bowman-stress-test-changes-svb-failure-review/830794",
+   "sentence": "Die Fed hat drei Änderungen an ihren Stresstests beschlossen.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "potential became decided",
+   "borderline": false
+  },
+  {
+   "id": "p11",
+   "item_key": "https://bankingdive.com/news/fed-michelle-bowman-stress-test-changes-svb-failure-review/830794",
+   "sentence": "Fed-Chef Jerome Powell hat eine Bewertung der Rolle der Notenbank beim Zusammenbruch der Silicon Valley Bank vorgelegt.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "wrong actor",
+   "borderline": false
+  },
+  {
+   "id": "p12",
+   "item_key": "https://bleepingcomputer.com/news/security/malicious-npm-packages-evade-install-script-defenses-at-runtime",
+   "sentence": "Eine laufende Malware-Kampagne auf npm versteckt Schadcode im normalen Laufzeitverhalten eines Pakets statt in Installationsskripten.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p13",
+   "item_key": "https://bleepingcomputer.com/news/security/malicious-npm-packages-evade-install-script-defenses-at-runtime",
+   "sentence": "Die Angreifer verstecken den Schadcode in den Installationsskripten des Pakets indexed-btree.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "inverted: runtime, not install scripts",
+   "borderline": false
+  },
+  {
+   "id": "p14",
+   "item_key": "https://bleepingcomputer.com/news/security/malicious-npm-packages-evade-install-script-defenses-at-runtime",
+   "sentence": "npm hat das Paket indexed-btree inzwischen entfernt.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "invented consequence",
+   "borderline": false
+  },
+  {
+   "id": "p15",
+   "item_key": "https://nvd.nist.gov/vuln/detail/CVE-2025-39964",
+   "sentence": "Im Linux-Kernel steckt eine Race Condition: Gleichzeitige Schreibzugriffe auf denselben AF_ALG-Socket können Daten unvorhersehbar vermischen.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p16",
+   "item_key": "https://nvd.nist.gov/vuln/detail/CVE-2025-39964",
+   "sentence": "Die Lücke erlaubt Angreifern, aus der Ferne Root-Rechte zu erlangen.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "invented impact",
+   "borderline": false
+  },
+  {
+   "id": "p17",
+   "item_key": "https://blog.cloudflare.com/saving-100-tb-of-ram-with-math",
+   "sentence": "Cloudflare hat den Arbeitsspeicherbedarf eines Pingora-basierten Dienstes mit Statistik gesenkt.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p18",
+   "item_key": "https://blog.cloudflare.com/saving-100-tb-of-ram-with-math",
+   "sentence": "Cloudflare hat den RAM-Verbrauch seines gesamten Netzwerks halbiert.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "one service became the whole network, 'halved' invented",
+   "borderline": false
+  },
+  {
+   "id": "p19",
+   "item_key": "https://blog.cloudflare.com/saving-100-tb-of-ram-with-math",
+   "sentence": "Dafür hat Cloudflare den Dienst von Rust nach Go portiert.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "invented migration",
+   "borderline": false
+  },
+  {
+   "id": "p20",
+   "item_key": "https://cointelegraph.com/news/us-sanctions-irans-bitbank-saying-it-processes-hormuz-safe-bitcoin-payments",
+   "sentence": "Das US-Finanzministerium hat Sanktionen gegen die iranische Börse BitBank verhängt.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p21",
+   "item_key": "https://cointelegraph.com/news/us-sanctions-irans-bitbank-saying-it-processes-hormuz-safe-bitcoin-payments",
+   "sentence": "BitBank hat nach eigenen Angaben Bitcoin im Wert von Hunderten Millionen Dollar an die Revolutionsgarden weitergeleitet.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "wrong attribution: Treasury says it, not BitBank",
+   "borderline": false
+  },
+  {
+   "id": "p22",
+   "item_key": "https://finextra.com/newsarticle/48434/ecb-chief-lagarde-helped-block-binances-mica-license---wsj",
+   "sentence": "Laut Wall Street Journal hat EZB-Präsidentin Christine Lagarde dabei geholfen, eine MiCA-Lizenz für Binance in Griechenland zu verhindern.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p23",
+   "item_key": "https://finextra.com/newsarticle/48434/ecb-chief-lagarde-helped-block-binances-mica-license---wsj",
+   "sentence": "Lagarde hat verhindert, dass Binance in Frankreich eine MiCA-Lizenz bekommt.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "wrong country",
+   "borderline": false
+  },
+  {
+   "id": "p24",
+   "item_key": "https://finextra.com/newsarticle/48434/ecb-chief-lagarde-helped-block-binances-mica-license---wsj",
+   "sentence": "Die EZB hat Binance offiziell die Lizenz entzogen.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "stronger claim, attribution dropped",
+   "borderline": false
+  },
+  {
+   "id": "p25",
+   "item_key": "https://infoq.com/news/2026/09/google-adk-1-0-released",
+   "sentence": "Google hat das Agent Development Kit für Kotlin in Version 1.0 veröffentlicht.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p26",
+   "item_key": "https://infoq.com/news/2026/09/google-adk-1-0-released",
+   "sentence": "Google plant, das Agent Development Kit für Kotlin im kommenden Jahr zu veröffentlichen.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "released became planned",
+   "borderline": false
+  },
+  {
+   "id": "p27",
+   "item_key": "https://infoq.com/news/2026/09/google-adk-1-0-released",
+   "sentence": "Die Kotlin-Version bietet deutlich weniger Funktionen als die Python-Variante.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "parity inverted",
+   "borderline": false
+  },
+  {
+   "id": "p28",
+   "item_key": "https://infoq.com/news/2026/09/alibaba-opencodereview",
+   "sentence": "OpenCodeReview kombiniert deterministische Pipelines mit einem LLM-Agenten für die dynamische Codeanalyse.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p29",
+   "item_key": "https://infoq.com/news/2026/09/alibaba-opencodereview",
+   "sentence": "Alibaba bietet OpenCodeReview als kostenpflichtigen Cloud-Dienst an.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "open source became paid service",
+   "borderline": false
+  },
+  {
+   "id": "p30",
+   "item_key": "https://infoq.com/news/2026/09/alibaba-opencodereview",
+   "sentence": "Das Werkzeug verzichtet komplett auf feste Regeln und überlässt die Prüfung einem Sprachmodell.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "inverted: it combines rules with an LLM",
+   "borderline": false
+  },
+  {
+   "id": "p31",
+   "item_key": "https://marktechpost.com/2026/09/19/alibaba-qwen-team-releases-qwen3-8-livetranslate",
+   "sentence": "Das Modell senkt die durchschnittliche Verzögerung von 2,8 auf 2,3 Sekunden.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p32",
+   "item_key": "https://marktechpost.com/2026/09/19/alibaba-qwen-team-releases-qwen3-8-livetranslate",
+   "sentence": "Das Modell erhöht die durchschnittliche Verzögerung von 2,3 auf 2,8 Sekunden.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "inverted with the source's own numbers: the number check cannot see it",
+   "borderline": false
+  },
+  {
+   "id": "p33",
+   "item_key": "https://marktechpost.com/2026/09/19/alibaba-qwen-team-releases-qwen3-8-livetranslate",
+   "sentence": "Qwen3.8-LiveTranslate läuft vollständig auf dem Smartphone.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "invented deployment claim",
+   "borderline": false
+  },
+  {
+   "id": "p34",
+   "item_key": "https://phoronix.com/news/Starling-0.5-3D-Desktop",
+   "sentence": "Starling 0.5 bringt einen optionalen 3D-Desktop-Modus.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p35",
+   "item_key": "https://phoronix.com/news/Starling-0.5-3D-Desktop",
+   "sentence": "Starling ist in Rust geschrieben und nutzt einen eigenen Wayland-Compositor.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "wrong language (Swift)",
+   "borderline": false
+  },
+  {
+   "id": "p36",
+   "item_key": "https://phoronix.com/news/Starling-0.5-3D-Desktop",
+   "sentence": "Mit Version 0.5 ist der 3D-Modus der neue Standard des Desktops.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "optional became default",
+   "borderline": false
+  },
+  {
+   "id": "p37",
+   "item_key": "https://stripe.com/blog/analyzing-rising-fraud-attempts-among-travel-and-leisure-businesses-on-stripe",
+   "sentence": "Laut Stripe erreichten Betrugsversuche gegen Reise- und Freizeitunternehmen im vergangenen Jahr ein Vierjahreshoch.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p38",
+   "item_key": "https://stripe.com/blog/analyzing-rising-fraud-attempts-among-travel-and-leisure-businesses-on-stripe",
+   "sentence": "Laut Stripe sind Betrugsversuche gegen Reiseunternehmen im vergangenen Jahr auf ein Vierjahrestief gefallen.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "inverted",
+   "borderline": false
+  },
+  {
+   "id": "p39",
+   "item_key": "https://stripe.com/blog/analyzing-rising-fraud-attempts-among-travel-and-leisure-businesses-on-stripe",
+   "sentence": "Stripe hat dafür Zahlungen von Banken und Versicherern ausgewertet.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "wrong population",
+   "borderline": false
+  },
+  {
+   "id": "p40",
+   "item_key": "https://techcrunch.com/podcast/automattics-33-hour-coup-and-can-ai-labs-police-themselves",
+   "sentence": "Anthropic-Chef Dario Amodei hat einen Plan skizziert, das Tempo der KI-Entwicklung an der Spitze zu steuern.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p41",
+   "item_key": "https://techcrunch.com/podcast/automattics-33-hour-coup-and-can-ai-labs-police-themselves",
+   "sentence": "Dario Amodei hat angekündigt, dass Anthropic die Entwicklung neuer Modelle einstellt.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "pace became stop - the same shape as the 2026-09-20 failure",
+   "borderline": false
+  },
+  {
+   "id": "p42",
+   "item_key": "https://techcrunch.com/podcast/automattics-33-hour-coup-and-can-ai-labs-police-themselves",
+   "sentence": "Der Vorschlag setzt auf staatliche Aufsichtsbehörden statt auf unabhängige Prüfer.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "inverted: independent evaluators",
+   "borderline": false
+  },
+  {
+   "id": "p43",
+   "item_key": "https://thehackernews.com/2026/09/claude-opus-5-helped-researchers-take.html",
+   "sentence": "Forscher der Sicherheitsfirma Hacktron haben mit Claude Opus 5 zwei Schwachstellen verkettet und Konten mehrerer OpenAI-Mitarbeiter übernommen.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p44",
+   "item_key": "https://thehackernews.com/2026/09/claude-opus-5-helped-researchers-take.html",
+   "sentence": "Claude Opus 5 hat eigenständig die Konten von OpenAI-Mitarbeitern angegriffen.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "tool became autonomous actor",
+   "borderline": false
+  },
+  {
+   "id": "p45",
+   "item_key": "https://thehackernews.com/2026/09/claude-opus-5-helped-researchers-take.html",
+   "sentence": "Die Forscher übernahmen Konten von Anthropic-Mitarbeitern.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "wrong victim",
+   "borderline": false
+  },
+  {
+   "id": "p46",
+   "item_key": "https://tomshardware.com/tech-industry/drones/researchers-build-a-drone-that-navigates-with-physical-whiskers-to-operate-in-dark-dusty-or-smoky-places-where-cameras-or-gps-can-fail-sub-100-gram-drones-run-34kb-software-to-enable-sub-millimeter-precision",
+   "sentence": "Forscher haben eine Drohne gebaut, die sich mit Tasthaaren orientiert, wo Kameras oder GPS versagen.",
+   "label": "faithful",
+   "kind": "perturbation",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "p47",
+   "item_key": "https://tomshardware.com/tech-industry/drones/researchers-build-a-drone-that-navigates-with-physical-whiskers-to-operate-in-dark-dusty-or-smoky-places-where-cameras-or-gps-can-fail-sub-100-gram-drones-run-34kb-software-to-enable-sub-millimeter-precision",
+   "sentence": "Die Tasthaar-Drohnen werden bereits von Feuerwehren eingesetzt.",
+   "label": "unfaithful",
+   "kind": "perturbation",
+   "note": "invented deployment",
+   "borderline": false
+  },
+  {
+   "id": "m01",
+   "item_key": "https://azure.microsoft.com/updates?id=563536",
+   "sentence": "Foundry Routines in Foundry Agent Service",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m02",
+   "item_key": "https://azure.microsoft.com/updates?id=563536",
+   "sentence": "Azure hat eine neue Funktion hinzugefügt, die es ermöglicht, automatisch ausgeführte Agents zu erstellen.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "loose but supported",
+   "borderline": false
+  },
+  {
+   "id": "m03",
+   "item_key": "https://azure.microsoft.com/updates?id=563536",
+   "sentence": "Dies kann bei der Implementierung von Planungsaufgaben nützlich sein.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "relevance filler inside the body",
+   "borderline": false
+  },
+  {
+   "id": "m04",
+   "item_key": "https://bleepingcomputer.com/news/security/malicious-npm-packages-evade-install-script-defenses-at-runtime",
+   "sentence": "Malicious npm Packages",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m05",
+   "item_key": "https://bleepingcomputer.com/news/security/malicious-npm-packages-evade-install-script-defenses-at-runtime",
+   "sentence": "Threat Actors nutzen Malware, die sich im normalen Laufzeiten des Pakets versteckt.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "garbled German, meaning intact",
+   "borderline": false
+  },
+  {
+   "id": "m06",
+   "item_key": "https://bleepingcomputer.com/news/security/malicious-npm-packages-evade-install-script-defenses-at-runtime",
+   "sentence": "Dies kann bei deinen Frontend-Entwicklungen relevant sein.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m07",
+   "item_key": "https://nvd.nist.gov/vuln/detail/CVE-2025-39964",
+   "sentence": "Linux Kernel Race Condition",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m08",
+   "item_key": "https://nvd.nist.gov/vuln/detail/CVE-2025-39964",
+   "sentence": "Ein Ressourcenkonflikt im Linux-Kernel kann zu unvorhergesehenen Datenverlusten führen.",
+   "label": "unfaithful",
+   "kind": "model",
+   "note": "source: data interleaved, inconsistent state - not data loss",
+   "borderline": false
+  },
+  {
+   "id": "m09",
+   "item_key": "https://nvd.nist.gov/vuln/detail/CVE-2025-39964",
+   "sentence": "Dies ist wichtig, wenn du auf Linux-basierten Systemen arbeitest.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m10",
+   "item_key": "https://blog.cloudflare.com/saving-100-tb-of-ram-with-math",
+   "sentence": "RAM Reduction with Math",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m11",
+   "item_key": "https://blog.cloudflare.com/saving-100-tb-of-ram-with-math",
+   "sentence": "Cloudflare hat seine Ressourcen signifikant reduziert, indem es statistische Methoden anwendete.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "generalises one service to 'its resources'; judged acceptable",
+   "borderline": true
+  },
+  {
+   "id": "m12",
+   "item_key": "https://blog.cloudflare.com/saving-100-tb-of-ram-with-math",
+   "sentence": "Dies könnte bei deinen eigenen Optimierungen hilfreich sein.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m13",
+   "item_key": "https://cointelegraph.com/news/us-sanctions-irans-bitbank-saying-it-processes-hormuz-safe-bitcoin-payments",
+   "sentence": "US Sanctions on Iranian Exchange",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m14",
+   "item_key": "https://cointelegraph.com/news/us-sanctions-irans-bitbank-saying-it-processes-hormuz-safe-bitcoin-payments",
+   "sentence": "Die US-Regierung hat eine iranische Börse gesanktioniert, die Bitcoin-Transaktionen durchführt.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m15",
+   "item_key": "https://cointelegraph.com/news/us-sanctions-irans-bitbank-saying-it-processes-hormuz-safe-bitcoin-payments",
+   "sentence": "Dies könnte bei deinen internationalen Transaktionen relevant sein.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m16",
+   "item_key": "https://finextra.com/newsarticle/48434/ecb-chief-lagarde-helped-block-binances-mica-license---wsj",
+   "sentence": "ECB Blocks Binance License",
+   "label": "unfaithful",
+   "kind": "model",
+   "note": "strengthened: 'ECB chief helped block' became 'ECB blocks'",
+   "borderline": true
+  },
+  {
+   "id": "m17",
+   "item_key": "https://finextra.com/newsarticle/48434/ecb-chief-lagarde-helped-block-binances-mica-license---wsj",
+   "sentence": "Christine Lagarde hat versucht, Binance bei der Erlangung einer Lizenz zu hindern.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "'tried to' is weaker, fine",
+   "borderline": false
+  },
+  {
+   "id": "m18",
+   "item_key": "https://finextra.com/newsarticle/48434/ecb-chief-lagarde-helped-block-binances-mica-license---wsj",
+   "sentence": "Dies könnte bei deinen internationalen Transaktionen relevant sein.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m19",
+   "item_key": "https://infoq.com/news/2026/09/google-adk-1-0-released",
+   "sentence": "Agent Development Kit for Kotlin",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m20",
+   "item_key": "https://infoq.com/news/2026/09/google-adk-1-0-released",
+   "sentence": "Google hat den Agent Development Kit für Kotlin vorgestellt, der nun mit Python und Java auf gleicher Ebene ist.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m21",
+   "item_key": "https://infoq.com/news/2026/09/google-adk-1-0-released",
+   "sentence": "Dies könnte bei deinen Projekten nützlich sein.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m22",
+   "item_key": "https://infoq.com/news/2026/09/alibaba-opencodereview",
+   "sentence": "OpenCodeReview Open Source",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m23",
+   "item_key": "https://infoq.com/news/2026/09/alibaba-opencodereview",
+   "sentence": "Alibaba hat eine AI-basierte Code-Review-CLI freigegeben, die automatische Prüfungen durchführt.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m24",
+   "item_key": "https://infoq.com/news/2026/09/alibaba-opencodereview",
+   "sentence": "Dies könnte bei deinen Code-Qualitätssicherungsprozessen hilfreich sein.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m25",
+   "item_key": "https://marktechpost.com/2026/09/19/alibaba-qwen-team-releases-qwen3-8-livetranslate",
+   "sentence": "Qwen3.8-LiveTranslate",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m26",
+   "item_key": "https://marktechpost.com/2026/09/19/alibaba-qwen-team-releases-qwen3-8-livetranslate",
+   "sentence": "Alibaba hat eine neue Interpretations-Modellierung freigegeben, das die Verzögerung reduziert und gleichzeitig Sprachdiarisation unterstützt.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "Qwen team is Alibaba's, per the title",
+   "borderline": false
+  },
+  {
+   "id": "m27",
+   "item_key": "https://marktechpost.com/2026/09/19/alibaba-qwen-team-releases-qwen3-8-livetranslate",
+   "sentence": "Dies könnte bei deinen internationalen Projekten nützlich sein.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m28",
+   "item_key": "https://stripe.com/blog/analyzing-rising-fraud-attempts-among-travel-and-leisure-businesses-on-stripe",
+   "sentence": "Fraud Analysis for Travel Businesses",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m29",
+   "item_key": "https://stripe.com/blog/analyzing-rising-fraud-attempts-among-travel-and-leisure-businesses-on-stripe",
+   "sentence": "Stripe hat Daten zu den Angriffen auf Reiseunternehmen analysiert und zeigt, dass es bei diesen Unternehmen zu einem Anstieg von Betrug versucht wird.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "garbled German, meaning intact",
+   "borderline": false
+  },
+  {
+   "id": "m30",
+   "item_key": "https://stripe.com/blog/analyzing-rising-fraud-attempts-among-travel-and-leisure-businesses-on-stripe",
+   "sentence": "Dies könnte bei deinen Transaktionsüberwachungen nützlich sein.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m31",
+   "item_key": "https://thehackernews.com/2026/09/claude-opus-5-helped-researchers-take.html",
+   "sentence": "AI-Driven Account Takeover",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m32",
+   "item_key": "https://thehackernews.com/2026/09/claude-opus-5-helped-researchers-take.html",
+   "sentence": "Forscher haben ein AI-basiertes Tool verwendet, um Mitarbeiterkonten von OpenAI zu übernehmen.",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m33",
+   "item_key": "https://thehackernews.com/2026/09/claude-opus-5-helped-researchers-take.html",
+   "sentence": "Dies zeigt die Bedeutung von Sicherheitsmaßnahmen.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m34",
+   "item_key": "https://tomshardware.com/tech-industry/big-tech/anthropic-openai-spacexai-and-google-face-antitrust-lawsuit-for-agreeing-to-slow-ai-development-plaintiffs-say-plan-has-been-in-motion-for-months-before-calls-agreement-self-serving",
+   "sentence": "Antitrust Lawsuit Against AI Companies",
+   "label": "faithful",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "m35",
+   "item_key": "https://tomshardware.com/tech-industry/big-tech/anthropic-openai-spacexai-and-google-face-antitrust-lawsuit-for-agreeing-to-slow-ai-development-plaintiffs-say-plan-has-been-in-motion-for-months-before-calls-agreement-self-serving",
+   "sentence": "Vier große KI-Unternehmen haben sich auf eine gemeinsame Strategie geeinigt, um den AI-Bereich zu regulieren.",
+   "label": "unfaithful",
+   "kind": "model",
+   "note": "source: agreed to SLOW development for safety; sentence: agreed a strategy to REGULATE the sector",
+   "borderline": false
+  },
+  {
+   "id": "m36",
+   "item_key": "https://tomshardware.com/tech-industry/big-tech/anthropic-openai-spacexai-and-google-face-antitrust-lawsuit-for-agreeing-to-slow-ai-development-plaintiffs-say-plan-has-been-in-motion-for-months-before-calls-agreement-self-serving",
+   "sentence": "Dies könnte die Zukunft des Bereichs beeinflussen.",
+   "label": "interpretation",
+   "kind": "model",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h01",
+   "item_key": "https://marktechpost.com/2026/09/19/openclaw-releases-2026-9-5",
+   "sentence": "OpenClaw 2026.9.5",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h02",
+   "item_key": "https://marktechpost.com/2026/09/19/openclaw-releases-2026-9-5",
+   "sentence": "Es bringt Atomic Updates und Hot-Reload für Plugins.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h03",
+   "item_key": "https://marktechpost.com/2026/09/19/openclaw-releases-2026-9-5",
+   "sentence": "Es verbessert die Stabilität und Flexibilität der Plattform.",
+   "label": "unfaithful",
+   "kind": "model-heldout",
+   "note": "invented benefit: the source lists features, not stability",
+   "borderline": false
+  },
+  {
+   "id": "h04",
+   "item_key": "https://nvd.nist.gov/vuln/detail/CVE-2025-39682",
+   "sentence": "CVE-2025-39682",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h05",
+   "item_key": "https://nvd.nist.gov/vuln/detail/CVE-2025-39682",
+   "sentence": "Es ist ein Sicherheitslücke im Linux-Kernel, die potenziell ausgenutzt werden kann.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h06",
+   "item_key": "https://nvd.nist.gov/vuln/detail/CVE-2025-39682",
+   "sentence": "Es ist wichtig, dass du dich über diese Lücke informierst.",
+   "label": "interpretation",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h07",
+   "item_key": "https://phoronix.com/news/Linux-7.3-rc4-Input",
+   "sentence": "Linux 7.3",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h08",
+   "item_key": "https://phoronix.com/news/Linux-7.3-rc4-Input",
+   "sentence": "Es unterstützt neue Gaming-Controller und verbessert verschiedene Treiber.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h09",
+   "item_key": "https://phoronix.com/news/Linux-7.3-rc4-Input",
+   "sentence": "Es ist wichtig, um die neuesten Funktionen zu nutzen.",
+   "label": "interpretation",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h10",
+   "item_key": "https://thehackernews.com/2026/09/claimed-bug-bounty-hunter-likely-used.html",
+   "sentence": "PhantomRaven npm Stealer",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h11",
+   "item_key": "https://thehackernews.com/2026/09/claimed-bug-bounty-hunter-likely-used.html",
+   "sentence": "Es ist ein Malware-Tool, das wahrscheinlich mit einem LLM erstellt wurde.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h12",
+   "item_key": "https://thehackernews.com/2026/09/claimed-bug-bounty-hunter-likely-used.html",
+   "sentence": "Es ist wichtig, um die neuesten Bedrohungen zu kennen.",
+   "label": "interpretation",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h13",
+   "item_key": "https://azure.microsoft.com/updates?id=571047",
+   "sentence": "Azure Database for PostgreSQL",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h14",
+   "item_key": "https://azure.microsoft.com/updates?id=571047",
+   "sentence": "Es unterstützt jetzt PostgreSQL 18.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h15",
+   "item_key": "https://azure.microsoft.com/updates?id=571047",
+   "sentence": "Es verbessert die Leistung und Zuverlässigkeit deiner Datenbanken.",
+   "label": "unfaithful",
+   "kind": "model-heldout",
+   "note": "the source offers performance and reliability, it does not claim to improve the reader's databases",
+   "borderline": true
+  },
+  {
+   "id": "h16",
+   "item_key": "https://bankingdive.com/news/fdic-hill-faster-merger-review-process-state-chartered-bank-parity/830789",
+   "sentence": "FPGA Merger Review",
+   "label": "unfaithful",
+   "kind": "model-heldout",
+   "note": "hallucinated: FDIC became FPGA",
+   "borderline": false
+  },
+  {
+   "id": "h17",
+   "item_key": "https://bankingdive.com/news/fdic-hill-faster-merger-review-process-state-chartered-bank-parity/830789",
+   "sentence": "Es gibt Vorschläge für eine schnelleren Überprüfung von Fusionen.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h18",
+   "item_key": "https://bankingdive.com/news/fdic-hill-faster-merger-review-process-state-chartered-bank-parity/830789",
+   "sentence": "Es könnte deine Arbeitsabläufe beeinflussen.",
+   "label": "interpretation",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h19",
+   "item_key": "https://techcrunch.com/2026/09/17/techcrunch-disrupt-2026-side-events-schedule-nmi-backblaze-peakxv-partners-augment-and-more-to-host",
+   "sentence": "TechCrunch Disrupt",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h20",
+   "item_key": "https://techcrunch.com/2026/09/17/techcrunch-disrupt-2026-side-events-schedule-nmi-backblaze-peakxv-partners-augment-and-more-to-host",
+   "sentence": "Es gibt viele Side Events, die du besuchen kannst.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h21",
+   "item_key": "https://techcrunch.com/2026/09/17/techcrunch-disrupt-2026-side-events-schedule-nmi-backblaze-peakxv-partners-augment-and-more-to-host",
+   "sentence": "Es ist eine gute Gelegenheit für Netzwerke und Ideenwechsel.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "evaluative, but the source says the community comes together to connect",
+   "borderline": true
+  },
+  {
+   "id": "h22",
+   "item_key": "https://bleepingcomputer.com/news/security/north-korean-waterplum-hackers-infected-30-000-devices-worldwide",
+   "sentence": "WaterPlum Hacker",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h23",
+   "item_key": "https://bleepingcomputer.com/news/security/north-korean-waterplum-hackers-infected-30-000-devices-worldwide",
+   "sentence": "Es gibt Berichte über eine weltweite Infektion von 30.000 Geräten.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h24",
+   "item_key": "https://bleepingcomputer.com/news/security/north-korean-waterplum-hackers-infected-30-000-devices-worldwide",
+   "sentence": "Es ist wichtig, um die neuesten Bedrohungen zu kennen.",
+   "label": "interpretation",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h25",
+   "item_key": "https://marktechpost.com/2026/09/18/spacexai-releases-grok-voice-transcribe-2-0",
+   "sentence": "Grok Voice Transcribe 2.0",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h26",
+   "item_key": "https://marktechpost.com/2026/09/18/spacexai-releases-grok-voice-transcribe-2-0",
+   "sentence": "Es ist eine neue Sprachzuschriften-API mit doppelter Genauigkeit.",
+   "label": "unfaithful",
+   "kind": "model-heldout",
+   "note": "the vendor's claim of 2x accuracy stated as fact",
+   "borderline": true
+  },
+  {
+   "id": "h27",
+   "item_key": "https://marktechpost.com/2026/09/18/spacexai-releases-grok-voice-transcribe-2-0",
+   "sentence": "Es könnte deine Anwendungen verbessern.",
+   "label": "interpretation",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h28",
+   "item_key": "https://thehackernews.com/2026/09/crowdsec-says-tanstack-npm-attack-led.html",
+   "sentence": "CrowdSec Hacking",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h29",
+   "item_key": "https://thehackernews.com/2026/09/crowdsec-says-tanstack-npm-attack-led.html",
+   "sentence": "Es gibt Berichte über eine Angriff auf CrowdSecs GitHub.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h30",
+   "item_key": "https://thehackernews.com/2026/09/crowdsec-says-tanstack-npm-attack-led.html",
+   "sentence": "Es ist wichtig, um die neuesten Sicherheitslücken zu kennen.",
+   "label": "interpretation",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h31",
+   "item_key": "https://azure.microsoft.com/updates?id=570509",
+   "sentence": "Azure Payments HSM v2",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h32",
+   "item_key": "https://azure.microsoft.com/updates?id=570509",
+   "sentence": "Es ist eine neue Version des HSM-Dienstes für Zahlungen.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h33",
+   "item_key": "https://azure.microsoft.com/updates?id=570509",
+   "sentence": "Es bietet höhere Sicherheit und Zuverlässigkeit.",
+   "label": "unfaithful",
+   "kind": "model-heldout",
+   "note": "'higher' security and reliability: a comparison the source does not make",
+   "borderline": true
+  },
+  {
+   "id": "h34",
+   "item_key": "https://phoronix.com/news/Jemalloc-5.4",
+   "sentence": "Jemalloc 5.4",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h35",
+   "item_key": "https://phoronix.com/news/Jemalloc-5.4",
+   "sentence": "Es ist eine neue Version des Memory Allocators mit Verbesserungen.",
+   "label": "faithful",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  },
+  {
+   "id": "h36",
+   "item_key": "https://phoronix.com/news/Jemalloc-5.4",
+   "sentence": "Es könnte die Leistung deiner Anwendungen verbessern.",
+   "label": "interpretation",
+   "kind": "model-heldout",
+   "note": "",
+   "borderline": false
+  }
+ ]
+}
