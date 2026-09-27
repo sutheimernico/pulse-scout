@@ -73,6 +73,8 @@ class GuardReport:
     unreadable: int = 0
     seconds: float = 0.0
     model: str = ""
+    # What was thrown away, kept with the digest (never shown) so a drop can be reviewed.
+    dropped: tuple[dict[str, str], ...] = ()
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -82,16 +84,16 @@ class GuardReport:
             "unreadable": self.unreadable,
             "seconds": round(self.seconds, 1),
             "quoted_cards": len(self.quoted),
+            "dropped": list(self.dropped),
         }
 
     def note(self) -> str | None:
         """The line the reader sees. Silent only when every sentence held."""
         if not self.rejected:
             return None
-        sentences = "Satz" if self.rejected == 1 else "Sätze"
         line = (
-            f"Faktencheck: {self.rejected} von {self.checked} {sentences} verworfen, "
-            f"weil die Quelle sie nicht stützt."
+            f"Faktencheck: {self.rejected} von {self.checked} Sätzen verworfen, "
+            f"weil die Quelle das Gesagte nicht stützt."
         )
         if self.quoted:
             line += " Wo nichts übrig blieb, steht der Originaltext der Quelle."
@@ -159,9 +161,15 @@ def assemble(
     guarded: list[Judgement] = []
     quoted: set[str] = set()
     checked = rejected = unreadable = 0
+    dropped: list[dict[str, str]] = []
     for judgement in judgements:
         check = checks[judgement.item_id]
         verdicts = (check.headline, *check.body)
+        dropped += [
+            {"item_id": judgement.item_id, "sentence": v.sentence, "answer": v.answer}
+            for v in verdicts
+            if not v.keep
+        ]
         checked += len(verdicts)
         rejected += sum(1 for v in verdicts if not v.keep)
         unreadable += sum(1 for v in verdicts if v.supported is None)
@@ -177,6 +185,7 @@ def assemble(
         unreadable=unreadable,
         seconds=seconds,
         model=model,
+        dropped=tuple(dropped),
     )
 
 

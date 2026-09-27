@@ -152,8 +152,10 @@ def test_the_report_counts_and_tells_the_reader() -> None:
     assert report.quoted == frozenset({"a1"})
     note = report.note()
     assert note is not None
-    assert "2 von 3 Sätze verworfen" in note
+    assert "2 von 3 Sätzen verworfen" in note
     assert "Originaltext" in note
+    assert [d["sentence"] for d in report.dropped] == sentences
+    assert report.as_dict()["dropped"][0]["item_id"] == "a1"
 
 
 def test_a_clean_report_says_nothing() -> None:
