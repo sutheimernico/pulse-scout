@@ -74,6 +74,8 @@ class Digest:
     notes: list[str] = field(default_factory=list)
     # What the faithfulness guard checked and threw away. Empty for digests built before it.
     guard: dict[str, object] = field(default_factory=dict)
+    # What the run cost and how the scorer behaved (D-P9), for the five-day observation.
+    stats: dict[str, object] = field(default_factory=dict)
 
     @property
     def funnel_line(self) -> str:
@@ -109,6 +111,7 @@ def build(
     now: datetime,
     extra_notes: list[str] | None = None,
     guard: GuardReport | None = None,
+    stats: dict[str, object] | None = None,
 ) -> Digest:
     """Turn a validated draft plus the selection into the object the screen renders.
 
@@ -177,6 +180,7 @@ def build(
         read_seconds=seconds,
         notes=notes,
         guard=guard.as_dict() if guard is not None else {},
+        stats=dict(stats or {}),
     )
 
 

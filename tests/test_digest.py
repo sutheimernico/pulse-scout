@@ -266,3 +266,13 @@ def test_a_digest_without_a_guard_has_no_guard_record() -> None:
     )
     assert digest.guard == {}
     assert all(card.quoted is False for card in digest.cards)
+
+
+def test_run_stats_travel_with_the_digest() -> None:
+    entries = [entry("Story one")]
+    stats = {"total_seconds": 612.3, "scoring": {"rank_correlation": 0.41}}
+    digest = build(
+        selection=select(entries), draft=draft_for(entries), counters=COUNTERS, now=NOW,
+        stats=stats,
+    )
+    assert json.loads(digest.to_json())["stats"] == stats

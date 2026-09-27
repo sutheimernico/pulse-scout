@@ -76,7 +76,8 @@ def main() -> int:
         connection.close()
         return 2
 
-    print(f"funnel: {funnel.counters.headline()} in {time.monotonic() - started:.0f}s", flush=True)
+    funnel_seconds = time.monotonic() - started
+    print(f"funnel: {funnel.counters.headline()} in {funnel_seconds:.0f}s", flush=True)
     if not funnel.candidates:
         print("nothing new today — no digest written", file=sys.stderr)
         connection.close()
@@ -97,6 +98,7 @@ def main() -> int:
             ]
         )
         notes.append("Ohne Modell-Bewertung gebaut — Reihenfolge rein deterministisch.")
+        scoring_stats: dict[str, object] = {"skipped": True}
     else:
         scoring = score_candidates(funnel.candidates, client=client)
         print(
@@ -105,6 +107,13 @@ def main() -> int:
             f"rank correlation {scoring.rank_correlation}",
             flush=True,
         )
+        scoring_stats = {
+            "rated": len(scoring.scored),
+            "parse_failures": scoring.parse_failures,
+            "call_failures": scoring.call_failures,
+            "rank_correlation": scoring.rank_correlation,
+            "seconds": round(scoring.seconds, 1),
+        }
         if scoring.parse_failures:
             notes.append(
                 f"{scoring.parse_failures} von {len(scoring.scored)} Bewertungen waren "
@@ -152,6 +161,16 @@ def main() -> int:
         now=now,
         extra_notes=notes,
         guard=checked,
+        stats={
+            "funnel_seconds": round(funnel_seconds, 1),
+            "scoring": scoring_stats,
+            "writing": {
+                "seconds": round(draft.seconds, 1),
+                "output_tokens": draft.output_tokens,
+                "attempts": draft.attempts,
+            },
+            "total_seconds": round(time.monotonic() - started, 1),
+        },
     )
     repo.save_digest(
         connection,
