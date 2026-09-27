@@ -3,10 +3,17 @@ name = "pulse-scout"
 version = "0.1.0"
 description = "Daily TLDR digest for the AI and tech world — local, free, phone-first"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+]
 
 [dependency-groups]
-dev = ["pytest>=8.0", "ruff>=0.6"]
+dev = [
+    "httpx2>=2.13.1",
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
 
 [build-system]
 requires = ["hatchling"]

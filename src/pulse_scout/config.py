@@ -129,3 +129,21 @@ def load_sources(path: Path | None = None) -> list[Source]:
         seen[source.url] = source.name
 
     return sources
+
+
+def read_env_file(path: Path) -> dict[str, str]:
+    """`KEY=value` lines from a `.env` file; a missing file is simply empty.
+
+    Twelve lines instead of python-dotenv. Only the web server reads this, for the phone token
+    and the port; the systemd unit hands the same file over with `EnvironmentFile=`.
+    """
+    if not path.is_file():
+        return {}
+    values: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
+            continue
+        key, _, value = stripped.partition("=")
+        values[key.strip()] = value.strip().strip("\"'")
+    return values
