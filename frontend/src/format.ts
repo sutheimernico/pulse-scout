@@ -82,15 +82,25 @@ export function staleNotice(digestDate: string, today: string): string | null {
   return `Seit ${age} Tagen kein neuer Digest — der abendliche Lauf ist vermutlich ausgefallen.`;
 }
 
-/** "2026-09-27T05:12:00.000Z" → "27.09., 07:12" in Berlin time. */
-export function formatFetchedAt(iso: string): string {
+/** "2026-09-27T05:12:00.000Z" → "27.09., 07:12" in Berlin time; null when unreadable. */
+export function formatFetchedAt(iso: string): string | null {
+  const when = new Date(iso);
+  if (!iso || Number.isNaN(when.getTime())) return null;
   return new Intl.DateTimeFormat("de-DE", {
     timeZone: "Europe/Berlin",
     day: "2-digit",
     month: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-  }).format(new Date(iso));
+  }).format(when);
+}
+
+/** The banner for a digest the service worker answered from storage. Never silent. */
+export function offlineNotice(fetchedAt: string): string {
+  const when = formatFetchedAt(fetchedAt);
+  return when
+    ? `Offline — gespeicherte Fassung, zuletzt geladen am ${when}.`
+    : "Offline — gespeicherte Fassung, Ladezeitpunkt unbekannt.";
 }
 
 export function rank(index: number): string {

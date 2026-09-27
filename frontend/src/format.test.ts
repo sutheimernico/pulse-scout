@@ -8,6 +8,7 @@ import {
   formatStand,
   funnelShare,
   groupKuer,
+  offlineNotice,
   rank,
   readTimeLabel,
   staleNotice,
@@ -30,6 +31,13 @@ describe("dates", () => {
 
   it("formats when an offline copy was fetched", () => {
     expect(formatFetchedAt("2026-09-27T05:12:00.000Z")).toBe("27.09., 07:12");
+    expect(formatFetchedAt("")).toBeNull();
+    expect(formatFetchedAt("gestern")).toBeNull();
+  });
+
+  it("labels an offline read even when the stamp is missing", () => {
+    expect(offlineNotice("2026-09-27T05:12:00.000Z")).toContain("27.09., 07:12");
+    expect(offlineNotice("")).toContain("Ladezeitpunkt unbekannt");
   });
 });
 

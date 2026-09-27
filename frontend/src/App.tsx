@@ -5,10 +5,10 @@ import {
   TIER_LABELS,
   berlinToday,
   formatDigestDate,
-  formatFetchedAt,
   formatStand,
   funnelShare,
   groupKuer,
+  offlineNotice,
   rank,
   readTimeLabel,
   staleNotice,
@@ -82,11 +82,7 @@ function DigestView({ digest, offlineSince }: { digest: Digest; offlineSince: st
         </div>
       </header>
 
-      {offlineSince && (
-        <p className="banner">
-          Offline — gespeicherte Fassung, zuletzt geladen am {formatFetchedAt(offlineSince)}.
-        </p>
-      )}
+      {offlineSince !== null && <p className="banner">{offlineNotice(offlineSince)}</p>}
       {stale && <p className="banner">{stale}</p>}
       {digest.notes.length > 0 && (
         <ul className="notes">
