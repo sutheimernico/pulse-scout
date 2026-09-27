@@ -1,0 +1,12 @@
+# The daily digest build. Started by pulse-scout.timer; also safe to start by hand:
+#   systemctl --user start pulse-scout.service
+[Unit]
+Description=pulse-scout daily digest build
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/private/pulse-scout/scripts/daily.sh
+# A 7B model on a CPU: minutes, not seconds. Past an hour something is stuck.
+TimeoutStartSec=3600
+Nice=10

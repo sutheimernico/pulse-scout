@@ -1,0 +1,11 @@
+# Evening run. Persistent=true: if the machine was off or WSL not running at 20:30, the run
+# happens at the next start instead of silently skipping the day (spec §6).
+[Unit]
+Description=pulse-scout daily digest, evenings
+
+[Timer]
+OnCalendar=*-*-* 20:30
+Persistent=true
+
+[Install]
+WantedBy=timers.target

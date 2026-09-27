@@ -120,3 +120,16 @@ def run_funnel(
     return FunnelResult(
         run_id=run_id, candidates=candidates, counters=counters, report=report
     )
+
+
+def digest_already_built(connection: sqlite3.Connection, *, now: datetime) -> bool:
+    """True when today's digest exists — the Berlin day, as the digest is dated (D-P11).
+
+    The timer fires in the evening and again at the next start after a missed slot
+    (`Persistent=true`). Both paths land here first, so a catch-up never rebuilds a digest
+    that already exists and never burns minutes of CPU for nothing.
+    """
+    # Imported here: core.digest imports this module for FunnelCounters.
+    from pulse_scout.core.digest import local_date
+
+    return repo.digest_for(connection, local_date(now).isoformat()) is not None

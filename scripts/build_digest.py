@@ -4,6 +4,7 @@
     uv run python scripts/build_digest.py                # the real thing, minutes of CPU
     uv run python scripts/build_digest.py --skip-scoring # deterministic ranking only, faster
     uv run python scripts/build_digest.py --dry-run      # funnel only, no model at all
+    uv run python scripts/build_digest.py --skip-if-built  # what the daily timer runs
 
 Exits non-zero and writes nothing if the model produces something that does not check out.
 That is the specified behaviour: yesterday's digest stays the latest one rather than being
@@ -32,7 +33,7 @@ from pulse_scout.llm.ollama import OllamaClient  # noqa: E402
 from pulse_scout.llm.scorer import ScoredCandidate, ScoringResult, score_candidates  # noqa: E402
 from pulse_scout.llm.verifier import guard  # noqa: E402
 from pulse_scout.llm.writer import WriterError, write_digest  # noqa: E402
-from pulse_scout.pipeline import run_funnel  # noqa: E402
+from pulse_scout.pipeline import digest_already_built, run_funnel  # noqa: E402
 from pulse_scout.profile import load_profile  # noqa: E402
 from pulse_scout.sources.cache import RawCache  # noqa: E402
 from pulse_scout.sources.collect import CollectError  # noqa: E402
@@ -47,11 +48,19 @@ def main() -> int:
     parser.add_argument("--skip-scoring", action="store_true", help="skip the 1.5b pass")
     parser.add_argument("--db", type=Path, default=None)
     parser.add_argument("--output-cap", type=int, default=700)
+    parser.add_argument(
+        "--skip-if-built", action="store_true", help="exit 0 if today's digest already exists"
+    )
     args = parser.parse_args()
 
     now = datetime.now(UTC)
     connection = connect(args.db)
     started = time.monotonic()
+
+    if args.skip_if_built and digest_already_built(connection, now=now):
+        print("today's digest already exists — nothing to do")
+        connection.close()
+        return 0
 
     try:
         funnel = run_funnel(
