@@ -69,6 +69,39 @@ Answer with exactly this JSON shape:
 Write {count} judgements, one per item, in the order given."""
 
 
+# --- verifying -----------------------------------------------------------------------------
+
+# The example in the rules is deliberately NOT the 2026-09-20 failure ("slow" became "stop"):
+# that case is in the labelled set, and a prompt that names its own test case measures nothing.
+VERIFY_SYSTEM = """You check one line from a German news briefing against its English source.
+
+The line may be a headline or a sentence. It may translate, simplify or shorten the source and
+leave details out. Clumsy German is fine. None of that is a reason to say NO.
+
+Answer NO only if the line says something the source does not say:
+- a different action or outcome (for example "plans to release" becoming "has released"),
+- a claim clearly stronger than the source's,
+- the wrong company, person, place or product,
+- a reason, number or detail that is not in the source.
+Otherwise answer YES.
+
+Answer with one word: YES or NO."""
+
+# Source first, sentence last: consecutive checks against the same source then share their
+# whole prefix, and Ollama's cache only has to read the new sentence.
+VERIFY_TEMPLATE = """Source:
+{source}
+
+Sentence:
+{sentence}
+
+Does the source support the sentence?"""
+
+
+def verify_prompt(*, source: str, sentence: str) -> str:
+    return VERIFY_TEMPLATE.format(source=source.strip(), sentence=sentence.strip())
+
+
 def score_prompt(*, title: str, source: str, summary: str, summary_limit: int = 320) -> str:
     """The per-item half of a scoring call. Short: it is paid for forty times per run."""
     trimmed = summary.strip()[:summary_limit]

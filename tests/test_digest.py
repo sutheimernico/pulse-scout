@@ -218,3 +218,51 @@ def test_re_running_the_same_day_replaces_rather_than_duplicates(tmp_path) -> No
     assert digest_dates(connection) == ["2026-09-20"]
     assert digest_for(connection, "2026-09-20")["card_count"] == 3
     connection.close()
+
+
+def test_the_guarded_judgements_replace_the_writers_and_the_reader_is_told() -> None:
+    from pulse_scout.core.faithfulness import CardCheck, Verdict, assemble
+
+    entries = [entry("Story one"), entry("Story two", tier=2, rank=2)]
+    draft = draft_for(entries)
+    rejected = CardCheck(
+        headline=Verdict(sentence="h", supported=True),
+        body=(
+            Verdict(sentence="Zwei Saetze Inhalt.", supported=False),
+            Verdict(sentence="Wirklich zwei.", supported=False),
+        ),
+    )
+    held = CardCheck(
+        headline=Verdict(sentence="h", supported=True),
+        body=(
+            Verdict(sentence="Zwei Saetze Inhalt.", supported=True),
+            Verdict(sentence="Wirklich zwei.", supported=False),
+        ),
+    )
+    guard = assemble(
+        draft.judgements, draft.items, {"a1": rejected, "a2": held}, seconds=2.0, model="m"
+    )
+
+    digest = build(
+        selection=select(entries), draft=draft, counters=COUNTERS, now=NOW, guard=guard
+    )
+
+    by_title = {card.item_key: card for card in digest.cards}
+    first = by_title[entries[0].candidate.cluster.primary.key]
+    second = by_title[entries[1].candidate.cluster.primary.key]
+    assert first.quoted is True
+    assert first.body == "Kontext."
+    assert second.quoted is False
+    assert second.body == "Zwei Saetze Inhalt."
+    assert any(note.startswith("Faktencheck: 3 von 6") for note in digest.notes)
+    assert digest.guard["rejected"] == 3
+    assert "_Originaltext der Quelle:_ Kontext." in render_markdown(digest)
+
+
+def test_a_digest_without_a_guard_has_no_guard_record() -> None:
+    entries = [entry("Story one")]
+    digest = build(
+        selection=select(entries), draft=draft_for(entries), counters=COUNTERS, now=NOW
+    )
+    assert digest.guard == {}
+    assert all(card.quoted is False for card in digest.cards)

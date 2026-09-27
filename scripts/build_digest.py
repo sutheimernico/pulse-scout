@@ -8,6 +8,9 @@
 Exits non-zero and writes nothing if the model produces something that does not check out.
 That is the specified behaviour: yesterday's digest stays the latest one rather than being
 replaced by something plausible.
+
+Every headline and body sentence is then checked against its source by a second model pass;
+what the source does not support is dropped before anything is stored.
 """
 
 from __future__ import annotations
@@ -27,6 +30,7 @@ from pulse_scout.core.selection import FINALIST_COUNT, select  # noqa: E402
 from pulse_scout.core.validate import DigestRejected  # noqa: E402
 from pulse_scout.llm.ollama import OllamaClient  # noqa: E402
 from pulse_scout.llm.scorer import ScoredCandidate, ScoringResult, score_candidates  # noqa: E402
+from pulse_scout.llm.verifier import guard  # noqa: E402
 from pulse_scout.llm.writer import WriterError, write_digest  # noqa: E402
 from pulse_scout.pipeline import run_funnel  # noqa: E402
 from pulse_scout.profile import load_profile  # noqa: E402
@@ -117,12 +121,28 @@ def main() -> int:
     print(f"  {draft.output_tokens} tokens in {draft.seconds:.0f}s "
           f"(attempt {draft.attempts})", flush=True)
 
+    # Every headline and body sentence is put back to the model against its source. What the
+    # source does not support is dropped — the reader never sees the unchecked draft.
+    print("checking: every factual sentence against its source ...", flush=True)
+    try:
+        checked = guard(draft.judgements, draft.items, client=client)
+    except WriterError as exc:
+        print(f"\nNO DIGEST: {exc}", file=sys.stderr)
+        connection.close()
+        return 3
+    print(
+        f"  {checked.checked} checked, {checked.rejected} rejected, "
+        f"{len(checked.quoted)} cards fell back to the source text, in {checked.seconds:.0f}s",
+        flush=True,
+    )
+
     digest = digest_module.build(
         selection=selection,
         draft=draft,
         counters=funnel.counters,
         now=now,
         extra_notes=notes,
+        guard=checked,
     )
     repo.save_digest(
         connection,

@@ -20,6 +20,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
+from pulse_scout.core.faithfulness import GuardReport
 from pulse_scout.core.selection import PFLICHT_SLOTS, TIER_LABELS, Selection
 from pulse_scout.llm.writer import Draft
 from pulse_scout.pipeline import FunnelCounters
@@ -44,6 +45,9 @@ class Card:
     source_name: str
     tier: int
     item_key: str
+    # True when the faithfulness guard rejected every body sentence and the body is now the
+    # source's own first sentence, verbatim and untranslated. The screen must say so.
+    quoted: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -68,6 +72,8 @@ class Digest:
     counters: dict[str, int] = field(default_factory=dict)
     read_seconds: int = 0
     notes: list[str] = field(default_factory=list)
+    # What the faithfulness guard checked and threw away. Empty for digests built before it.
+    guard: dict[str, object] = field(default_factory=dict)
 
     @property
     def funnel_line(self) -> str:
@@ -102,16 +108,21 @@ def build(
     counters: FunnelCounters,
     now: datetime,
     extra_notes: list[str] | None = None,
+    guard: GuardReport | None = None,
 ) -> Digest:
-    """Turn a validated draft plus the selection into the object the screen renders."""
+    """Turn a validated draft plus the selection into the object the screen renders.
+
+    With a `guard`, its corrected judgements replace the writer's: what the reader sees is
+    what survived the faithfulness check, never the unchecked draft.
+    """
     by_key = {item.key: handle for handle, item in draft.items.items()}
+    judgements = guard.judgements if guard is not None else draft.judgements
+    quoted = guard.quoted if guard is not None else frozenset()
     cards: list[Card] = []
     for entry in selection.pflicht:
         item = entry.candidate.cluster.primary
         handle = by_key.get(item.key)
-        judgement = next(
-            (j for j in draft.judgements if j.item_id == handle), None
-        )
+        judgement = next((j for j in judgements if j.item_id == handle), None)
         if judgement is None:
             # The writer produced fewer judgements than there are slots. That is allowed —
             # the validator only rejects invented ones — and an unwritten slot is simply
@@ -126,6 +137,7 @@ def build(
                 source_name=item.source_name,
                 tier=entry.candidate.tier,
                 item_key=item.key,
+                quoted=handle in quoted,
             )
         )
 
@@ -147,6 +159,9 @@ def build(
         )
     if draft.truncated:
         notes.append("Der Text wurde vom Ausgabelimit abgeschnitten.")
+    guard_note = guard.note() if guard is not None else None
+    if guard_note:
+        notes.append(guard_note)
 
     seconds = read_seconds(cards, draft.thread, kuer)
     if seconds > READ_BUDGET_SECONDS:
@@ -161,6 +176,7 @@ def build(
         counters=counters.as_counters(),
         read_seconds=seconds,
         notes=notes,
+        guard=guard.as_dict() if guard is not None else {},
     )
 
 
@@ -184,7 +200,7 @@ def render_markdown(digest: Digest) -> str:
         lines += [
             f"### {card.headline}",
             "",
-            card.body,
+            f"> _Originaltext der Quelle:_ {card.body}" if card.quoted else card.body,
             "",
             f"**Darum geht's dich an:** {card.why_you}",
             "",
