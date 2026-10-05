@@ -15,7 +15,7 @@
 # signal    built-in relevance measure the source ships with, if any.
 #
 # Tier 1 is scoped to what Nico actually works with (established 2026-08-07 by reading the
-# employer repos, not by guessing): FastAPI + SQLModel + Alembic + PostgreSQL on the backend,
+# the work repos, not by guessing): FastAPI + SQLModel + Alembic + PostgreSQL on the backend,
 # React 19 + TypeScript + Vite + Tailwind + React Aria on the frontend, Pulumi + Azure
 # Container Apps + Azure DevOps for infrastructure, and architecture as the current focus.
 # Notably NOT his stack: Terraform (they use Pulumi), Kubernetes (they use Container Apps),

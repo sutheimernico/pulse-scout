@@ -9,7 +9,7 @@ import {
   routeFor,
 } from "../public/sw-strategy.js";
 
-const ORIGIN = "https://wsl-claude.example.ts.net:8443";
+const ORIGIN = "https://host.example.ts.net:8443";
 const url = (path: string) => new URL(path, ORIGIN);
 
 class FakeCache {

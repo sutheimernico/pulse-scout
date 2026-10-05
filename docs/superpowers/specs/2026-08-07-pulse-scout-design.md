@@ -59,7 +59,7 @@ than guessed.
 
 ### Tier 1 — his job
 
-Scoped to the stack in the employer repositories as of 2026-08-07:
+Scoped to the stack in the work repositories as of 2026-08-07:
 
 | Area | What he actually uses |
 |---|---|
@@ -249,7 +249,7 @@ podcast app rather than in the PWA.
 | D4 | 2026-08-07 | PWA in the equity-scout pattern, not a native app | The pattern already runs on Nico's machine; no build cycle, no store |
 | D5 | 2026-08-07 | Topic set narrowed: AI models first, Azure second; Product/Design/Marketing and dbt dropped | Nico's explicit correction plus the verified finding that the dropped topics have no daily volume |
 | D6 | 2026-08-07 | Build stage 1 first, then stage 2 on top | Stage 2 needs weeks of history before it does anything; stage 1 produces that history |
-| D7 | 2026-08-07 | Tier 1 is fullstack and architecture, derived from the actual employer stack rather than assumed | Nico corrected the premise: he is a fullstack developer with a backend emphasis working on architecture questions, not a data engineer. The source list was rebuilt from what his repositories contain — which also removed Terraform, Kubernetes and SQL Server, none of which they use |
+| D7 | 2026-08-07 | Tier 1 is fullstack and architecture, derived from the real stack of a fullstack job rather than assumed | Nico corrected the premise: he is a fullstack developer with a backend emphasis working on architecture questions, not a data engineer. The source list was rebuilt from what his repositories contain — which also removed Terraform, Kubernetes and SQL Server, none of which they use |
 | D8 | 2026-08-07 | At most three of the five Pflicht slots may come from one tier | Otherwise a busy AI news day pushes his own job out of his digest |
 
 ---

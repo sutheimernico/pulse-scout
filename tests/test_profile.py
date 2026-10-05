@@ -121,7 +121,7 @@ def test_the_shipped_profile_loads() -> None:
 
 
 def test_the_shipped_profile_matches_the_corrected_topic_set() -> None:
-    """D7: fullstack and architecture, from the real employer stack — not data engineering."""
+    """D7: fullstack and architecture, from a real fullstack stack — not data engineering."""
     profile = load_profile()
 
     for wanted in ("fastapi", "sqlmodel", "alembic", "react 19", "react aria", "pulumi",

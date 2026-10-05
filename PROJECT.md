@@ -150,7 +150,7 @@ than none. Update the script if the phase logic stops matching reality.
 | D4 | 2026-08-07 | PWA in the equity-scout pattern, not a native app |
 | D5 | 2026-08-07 | Topics narrowed: Product/Design/Marketing and dbt dropped |
 | D6 | 2026-08-07 | Stage 1 first, stage 2 on top of it |
-| D7 | 2026-08-07 | Tier 1 is fullstack and architecture, derived from the actual employer stack rather than assumed. Also removed Terraform, Kubernetes and SQL Server — none of which they use |
+| D7 | 2026-08-07 | Tier 1 is fullstack and architecture, derived from the real stack of a fullstack job rather than assumed. Also removed Terraform, Kubernetes and SQL Server — none of which they use |
 | D8 | 2026-08-07 | At most three of the five Pflicht slots may come from one tier |
 | D9 | 2026-09-20 | Items are cut to a 72-hour publication window and a persistent seen-set keyed by canonical URL. The configured feeds are archives, not streams — without this the funnel re-processes ~570 items every morning |
 | D10 | 2026-09-20 | The Kür is capped at 15 lines (5 + 15 = the 12–20 items D1 budgets). The spec said "one line per item" without a limit, which would have been 35 lines |
