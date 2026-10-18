@@ -79,6 +79,25 @@ There is no "rebuild today's digest": a second build on the same day finds nothi
 seen-set already holds every item the first one fetched — and writes nothing, so the first
 digest stays. That is the seen-set doing its job, not a failure.
 
+## When a day is missing
+
+```bash
+uv run python scripts/observe.py --days 14     # table plus "Kein Digest an: ..." for every gap
+journalctl --user -u pulse-scout.service --since "2 days ago" | grep -E "funnel|scoring|writing|NO DIGEST|ABORTED|budget"
+systemctl --user is-active pulse-scout-web.service   # the phone needs this one too
+```
+
+Causes seen so far:
+
+- **The model was busy.** Ollama serves one request at a time; if another project holds it, each
+  call waits its turn. `NO DIGEST: ... run time budget used up` means exactly this. Nothing is
+  lost: the failed run releases its items, so start the build once the other job is done
+  (`systemctl --user start pulse-scout.service`).
+- **WSL was off at 20:30.** `Persistent=true` catches up at the next start; no action.
+- **The web unit is stopped.** `Restart=on-failure` does not restart a unit that was stopped
+  cleanly (WSL shutdown, `systemctl stop`). The digest still builds, but the phone gets nothing:
+  `systemctl --user start pulse-scout-web.service`.
+
 ## Undo (everything this project installed)
 
 ```bash

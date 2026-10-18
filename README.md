@@ -11,6 +11,12 @@ missed days); a PWA serves it to the phone, offline too — verified in headless
 yet on the real phone. What is left for stage 1 is that, and the five-day observation, which
 only Nico can do (`docs/observations/2026-09-27-five-days.md`).
 
+**2026-10-18 — reliability pass.** Between 09-28 and 10-15 the timer produced a digest on 17 of
+18 days. From 10-16 on, none: another local project was holding the same Ollama, every model
+call queued behind it, and one run hung for 40 hours before failing. A run now stops after a
+two-hour wall-clock budget, and a run that writes no digest gives its fetched items back so the
+retry still sees them. Details and what to do when a day is missing: `docs/ops.md`.
+
 Plan and backlog: `docs/superpowers/plans/2026-09-20-pulse-scout-v1.md` and `PLAN.md`.
 Operations — timer, server, phone access, logs, undo: `docs/ops.md`.
 
