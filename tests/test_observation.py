@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from pulse_scout.core.observation import HEADER, SEPARATOR, row
+from datetime import date
+
+from pulse_scout.core.observation import HEADER, SEPARATOR, missing_days, row
 
 FULL = {
     "digest_date": "2026-09-28",
@@ -45,3 +47,12 @@ def test_a_skipped_scoring_pass_is_named() -> None:
 
 def test_header_and_separator_have_the_same_width() -> None:
     assert HEADER.count("|") == SEPARATOR.count("|") == row(FULL).count("|")
+
+
+def test_missing_days_names_every_gap_up_to_today() -> None:
+    gaps = missing_days(["2026-10-09", "2026-10-10", "2026-10-12"], today=date(2026, 10, 13))
+    assert gaps == ["2026-10-11", "2026-10-13"]
+
+
+def test_missing_days_is_empty_without_any_digest() -> None:
+    assert missing_days([], today=date(2026, 10, 13)) == []

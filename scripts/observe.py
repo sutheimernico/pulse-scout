@@ -12,12 +12,14 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from pulse_scout.core.observation import HEADER, SEPARATOR, row  # noqa: E402
+from pulse_scout.core.observation import HEADER, SEPARATOR, missing_days, row  # noqa: E402
 from pulse_scout.store import repo  # noqa: E402
 from pulse_scout.store.db import connect  # noqa: E402
 
@@ -33,6 +35,10 @@ def main() -> int:
     print(SEPARATOR)
     for day in dates:
         print(row(json.loads(repo.digest_for(connection, day)["payload"])))
+    all_dates = repo.digest_dates(connection, limit=10_000)
+    gaps = missing_days(all_dates, today=datetime.now(ZoneInfo("Europe/Berlin")).date())
+    if gaps:
+        print(f"\nKein Digest an: {', '.join(gaps)}  (journalctl --user -u pulse-scout.service)")
     connection.close()
     return 0
 

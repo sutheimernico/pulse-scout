@@ -6,7 +6,8 @@ afterwards. The verdict column stays empty: that one is Nico's, and only his.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
+from datetime import date, timedelta
 from typing import Any
 
 HEADER = (
@@ -57,3 +58,21 @@ def row(payload: Mapping[str, Any]) -> str:
         "",
     ]
     return "| " + " | ".join(cells) + " |"
+
+
+def missing_days(digest_dates: Iterable[str], *, today: date) -> list[str]:
+    """Days without a digest, from the first stored one through `today`.
+
+    Five consecutive mornings is the acceptance test, so a gap is the finding that matters
+    most and must not hide between two table rows.
+    """
+    present = {date.fromisoformat(d) for d in digest_dates}
+    if not present:
+        return []
+    day = min(present)
+    gaps: list[str] = []
+    while day <= today:
+        if day not in present:
+            gaps.append(day.isoformat())
+        day += timedelta(days=1)
+    return gaps
