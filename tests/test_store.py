@@ -15,6 +15,7 @@ from pulse_scout.store.db import SCHEMA_VERSION, connect, migrate
 from pulse_scout.store.repo import (
     count_items,
     finish_run,
+    forget_items_first_seen_at,
     latest_run,
     record_outcomes,
     record_seen,
@@ -153,3 +154,15 @@ def test_an_unknown_counter_is_refused(db) -> None:
 
 def test_latest_run_is_none_on_an_empty_database(db) -> None:
     assert latest_run(db) is None
+
+
+def test_forgetting_a_run_removes_only_its_own_new_items(db) -> None:
+    """A run that wrote no digest gives its items back, so the next attempt sees them again."""
+    record_seen(db, [item("Old story")], now=NOW - timedelta(days=1))
+    record_seen(db, [item("Old story"), item("New story")], now=NOW)
+
+    assert forget_items_first_seen_at(db, now=NOW) == 1
+
+    assert count_items(db) == 1
+    again = record_seen(db, [item("New story")], now=NOW + timedelta(hours=1))
+    assert [i.title for i in again] == ["New story"]

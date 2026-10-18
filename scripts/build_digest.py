@@ -82,123 +82,128 @@ def main() -> int:
 
     funnel_seconds = time.monotonic() - started
     print(f"funnel: {funnel.counters.headline()} in {funnel_seconds:.0f}s", flush=True)
-    if not funnel.candidates:
-        print("nothing new today — no digest written", file=sys.stderr)
-        connection.close()
-        return 1
-    if args.dry_run:
-        connection.close()
-        return 0
+    published = False
+    try:
+        if not funnel.candidates:
+            print("nothing new today — no digest written", file=sys.stderr)
+            return 1
+        if args.dry_run:
+            return 0
 
-    client = OllamaClient(deadline=time.time() + RUN_BUDGET_S)
-    notes: list[str] = []
+        client = OllamaClient(deadline=time.time() + RUN_BUDGET_S)
+        notes: list[str] = []
 
-    if args.skip_scoring:
-        # Deterministic order only. Honest about it: the note reaches the digest.
-        scoring = ScoringResult(
-            scored=[
-                ScoredCandidate(candidate=candidate, deterministic_rank=position)
-                for position, candidate in enumerate(funnel.candidates, start=1)
-            ]
+        if args.skip_scoring:
+            # Deterministic order only. Honest about it: the note reaches the digest.
+            scoring = ScoringResult(
+                scored=[
+                    ScoredCandidate(candidate=candidate, deterministic_rank=position)
+                    for position, candidate in enumerate(funnel.candidates, start=1)
+                ]
+            )
+            notes.append("Ohne Modell-Bewertung gebaut — Reihenfolge rein deterministisch.")
+            scoring_stats: dict[str, object] = {"skipped": True}
+        else:
+            scoring = score_candidates(funnel.candidates, client=client)
+            print(
+                f"scoring: {len(scoring.scored)} rated in {scoring.seconds:.0f}s, "
+                f"{scoring.parse_failures} unparseable, "
+                f"rank correlation {scoring.rank_correlation}",
+                flush=True,
+            )
+            scoring_stats = {
+                "rated": len(scoring.scored),
+                "parse_failures": scoring.parse_failures,
+                "call_failures": scoring.call_failures,
+                "rank_correlation": scoring.rank_correlation,
+                "seconds": round(scoring.seconds, 1),
+            }
+            if scoring.parse_failures:
+                notes.append(
+                    f"{scoring.parse_failures} von {len(scoring.scored)} Bewertungen waren "
+                    f"nicht lesbar — diese Einträge behalten ihre Platzierung aus dem Ranking."
+                )
+
+        finalists = scoring.finalists(FINALIST_COUNT)
+        # Compared by cluster key rather than by value: a ScoredCandidate carries the whole
+        # cluster, so `in` would deep-compare every item on every lookup.
+        chosen = {e.candidate.cluster.key for e in finalists}
+        selection = select(
+            finalists, [e for e in scoring.scored if e.candidate.cluster.key not in chosen]
         )
-        notes.append("Ohne Modell-Bewertung gebaut — Reihenfolge rein deterministisch.")
-        scoring_stats: dict[str, object] = {"skipped": True}
-    else:
-        scoring = score_candidates(funnel.candidates, client=client)
+        print(f"writing: {len(finalists)} finalists to qwen2.5:7b ...", flush=True)
+
+        try:
+            draft = write_digest(finalists, client=client, now=now, output_cap=args.output_cap)
+        except (DigestRejected, WriterError) as exc:
+            print(f"\nNO DIGEST: {exc}", file=sys.stderr)
+            return 3
+
+        print(f"  {draft.output_tokens} tokens in {draft.seconds:.0f}s "
+              f"(attempt {draft.attempts})", flush=True)
+
+        # Every headline and body sentence is put back to the model against its source. What the
+        # source does not support is dropped — the reader never sees the unchecked draft.
+        print("checking: every factual sentence against its source ...", flush=True)
+        try:
+            checked = guard(draft.judgements, draft.items, client=client)
+        except WriterError as exc:
+            print(f"\nNO DIGEST: {exc}", file=sys.stderr)
+            return 3
         print(
-            f"scoring: {len(scoring.scored)} rated in {scoring.seconds:.0f}s, "
-            f"{scoring.parse_failures} unparseable, "
-            f"rank correlation {scoring.rank_correlation}",
+            f"  {checked.checked} checked, {checked.rejected} rejected, "
+            f"{len(checked.quoted)} cards fell back to the source text, in {checked.seconds:.0f}s",
             flush=True,
         )
-        scoring_stats = {
-            "rated": len(scoring.scored),
-            "parse_failures": scoring.parse_failures,
-            "call_failures": scoring.call_failures,
-            "rank_correlation": scoring.rank_correlation,
-            "seconds": round(scoring.seconds, 1),
-        }
-        if scoring.parse_failures:
-            notes.append(
-                f"{scoring.parse_failures} von {len(scoring.scored)} Bewertungen waren "
-                f"nicht lesbar — diese Einträge behalten ihre Platzierung aus dem Ranking."
-            )
 
-    finalists = scoring.finalists(FINALIST_COUNT)
-    # Compared by cluster key rather than by value: a ScoredCandidate carries the whole
-    # cluster, so `in` would deep-compare every item on every lookup.
-    chosen = {e.candidate.cluster.key for e in finalists}
-    selection = select(
-        finalists, [e for e in scoring.scored if e.candidate.cluster.key not in chosen]
-    )
-    print(f"writing: {len(finalists)} finalists to qwen2.5:7b ...", flush=True)
-
-    try:
-        draft = write_digest(finalists, client=client, now=now, output_cap=args.output_cap)
-    except (DigestRejected, WriterError) as exc:
-        print(f"\nNO DIGEST: {exc}", file=sys.stderr)
-        connection.close()
-        return 3
-
-    print(f"  {draft.output_tokens} tokens in {draft.seconds:.0f}s "
-          f"(attempt {draft.attempts})", flush=True)
-
-    # Every headline and body sentence is put back to the model against its source. What the
-    # source does not support is dropped — the reader never sees the unchecked draft.
-    print("checking: every factual sentence against its source ...", flush=True)
-    try:
-        checked = guard(draft.judgements, draft.items, client=client)
-    except WriterError as exc:
-        print(f"\nNO DIGEST: {exc}", file=sys.stderr)
-        connection.close()
-        return 3
-    print(
-        f"  {checked.checked} checked, {checked.rejected} rejected, "
-        f"{len(checked.quoted)} cards fell back to the source text, in {checked.seconds:.0f}s",
-        flush=True,
-    )
-
-    digest = digest_module.build(
-        selection=selection,
-        draft=draft,
-        counters=funnel.counters,
-        now=now,
-        extra_notes=notes,
-        guard=checked,
-        stats={
-            "funnel_seconds": round(funnel_seconds, 1),
-            "scoring": scoring_stats,
-            "writing": {
-                "seconds": round(draft.seconds, 1),
-                "output_tokens": draft.output_tokens,
-                "attempts": draft.attempts,
+        digest = digest_module.build(
+            selection=selection,
+            draft=draft,
+            counters=funnel.counters,
+            now=now,
+            extra_notes=notes,
+            guard=checked,
+            stats={
+                "funnel_seconds": round(funnel_seconds, 1),
+                "scoring": scoring_stats,
+                "writing": {
+                    "seconds": round(draft.seconds, 1),
+                    "output_tokens": draft.output_tokens,
+                    "attempts": draft.attempts,
+                },
+                "total_seconds": round(time.monotonic() - started, 1),
             },
-            "total_seconds": round(time.monotonic() - started, 1),
-        },
-    )
-    repo.save_digest(
-        connection,
-        digest_date=digest.digest_date,
-        generated_at=digest.generated_at,
-        payload=digest.to_json(),
-        read_seconds=digest.read_seconds,
-        card_count=len(digest.cards),
-        run_id=funnel.run_id,
-    )
+        )
+        repo.save_digest(
+            connection,
+            digest_date=digest.digest_date,
+            generated_at=digest.generated_at,
+            payload=digest.to_json(),
+            read_seconds=digest.read_seconds,
+            card_count=len(digest.cards),
+            run_id=funnel.run_id,
+        )
 
-    out_dir = ROOT / "data" / "digests"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"{digest.digest_date}.md"
-    path.write_text(digest_module.render_markdown(digest), encoding="utf-8")
+        out_dir = ROOT / "data" / "digests"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        path = out_dir / f"{digest.digest_date}.md"
+        path.write_text(digest_module.render_markdown(digest), encoding="utf-8")
 
-    minutes, seconds = divmod(digest.read_seconds, 60)
-    print(
-        f"\n{digest.funnel_line} · {minutes}:{seconds:02d} Lesezeit"
-        f"{' · ÜBER BUDGET' if digest.over_budget else ''}"
-    )
-    print(f"wrote {path.relative_to(ROOT)} after {time.monotonic() - started:.0f}s total")
-    connection.close()
-    return 0
+        minutes, seconds = divmod(digest.read_seconds, 60)
+        print(
+            f"\n{digest.funnel_line} · {minutes}:{seconds:02d} Lesezeit"
+            f"{' · ÜBER BUDGET' if digest.over_budget else ''}"
+        )
+        print(f"wrote {path.relative_to(ROOT)} after {time.monotonic() - started:.0f}s total")
+        published = True
+        return 0
+    finally:
+        # A run that wrote no digest must not keep the items it fetched: they are marked seen
+        # before the model runs, so without this the next attempt would start without today's
+        # best candidates and the story would never reach a digest.
+        if not published:
+            repo.forget_items_first_seen_at(connection, now=now)
+        connection.close()
 
 
 if __name__ == "__main__":

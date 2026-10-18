@@ -71,6 +71,17 @@ def record_seen(
     return fresh
 
 
+def forget_items_first_seen_at(connection: sqlite3.Connection, *, now: datetime) -> int:
+    """Un-see the items a run recorded as new, because that run produced no digest.
+
+    `first_seen` carries the run's logical start, so it identifies exactly this run's new
+    items. Returns how many were removed.
+    """
+    cursor = connection.execute("DELETE FROM items WHERE first_seen = ?", (_stamp(now),))
+    connection.commit()
+    return cursor.rowcount
+
+
 def count_items(connection: sqlite3.Connection) -> int:
     return connection.execute("SELECT COUNT(*) FROM items").fetchone()[0]
 
