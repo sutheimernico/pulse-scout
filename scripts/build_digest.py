@@ -22,6 +22,10 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
+# A normal run takes 5-15 minutes. Past two hours the model is being used by something else
+# or the host slept; stop with a clear message rather than hold the daily lock for days.
+RUN_BUDGET_S = 2 * 60 * 60
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
@@ -86,7 +90,7 @@ def main() -> int:
         connection.close()
         return 0
 
-    client = OllamaClient()
+    client = OllamaClient(deadline=time.time() + RUN_BUDGET_S)
     notes: list[str] = []
 
     if args.skip_scoring:

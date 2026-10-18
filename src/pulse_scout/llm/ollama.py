@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from collections.abc import Callable
@@ -118,10 +119,22 @@ class OllamaClient:
     host: str = field(default_factory=lambda: os.environ.get("OLLAMA_HOST", DEFAULT_HOST))
     timeout_s: float = DEFAULT_TIMEOUT_S
     transport: Transport = _urllib_transport
+    # Wall-clock epoch after which no call starts. Without it a busy Ollama (another project
+    # holding the model) turns 40 scoring calls into 40 x timeout_s of waiting: on 2026-10-16
+    # one run hung for 40 hours and the digest slot was lost. Wall clock, not monotonic: the
+    # monotonic clock stands still while the host sleeps, which is when runs went missing.
+    deadline: float | None = None
+    clock: Callable[[], float] = time.time
 
     def _post(self, path: str, body: dict[str, Any]) -> dict[str, Any]:
         url = f"{self.host.rstrip('/')}{path}"
-        raw = self.transport(url, json.dumps(body).encode("utf-8"), self.timeout_s)
+        timeout = self.timeout_s
+        if self.deadline is not None:
+            remaining = self.deadline - self.clock()
+            if remaining <= 0:
+                raise OllamaError("run time budget used up before this call (model busy or stuck)")
+            timeout = min(timeout, remaining)
+        raw = self.transport(url, json.dumps(body).encode("utf-8"), timeout)
         try:
             parsed = json.loads(raw)
         except json.JSONDecodeError as exc:

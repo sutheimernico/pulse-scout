@@ -109,3 +109,24 @@ def test_host_trailing_slash_does_not_double_up() -> None:
     api.host = "http://ollama.test/"
     api.generate(model="m", prompt="p")
     assert transport.seen[0]["url"] == "http://ollama.test/api/generate"
+
+
+def test_deadline_caps_the_call_timeout_and_then_refuses_new_calls() -> None:
+    transport = scripted_transport([GENERATE_OK])
+    now = [1000.0]
+    api = OllamaClient(
+        host="http://ollama.test",
+        transport=transport,
+        timeout_s=1800.0,
+        deadline=1060.0,
+        clock=lambda: now[0],
+    )
+
+    api.generate(model="qwen2.5:1.5b", prompt="rate this")
+    # The per-call timeout never outlives the run budget.
+    assert transport.seen[0]["timeout"] == pytest.approx(60.0)
+
+    now[0] = 1060.0
+    with pytest.raises(OllamaError, match="budget"):
+        api.generate(model="qwen2.5:1.5b", prompt="rate this")
+    assert len(transport.seen) == 1  # refused before touching the network
